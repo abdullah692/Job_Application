@@ -8,7 +8,7 @@ import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Context } from "../../main";
-import Employhub from '../../assets/images/employhub_logo.png'
+import Employhub from '../../assets/images/employee.png'
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -51,82 +51,119 @@ const Register = () => {
 
   return (
     <>
-      <section className="authPage">
-        <div className="container">
-          <div className="header">
-            <img src={Employhub} alt="logo" />
-            <h3>Create a new account</h3>
-          </div>
-          <form>
-            <div className="inputTag">
-              <label>Register As</label>
-              <div>
-                <select value={role} onChange={(e) => setRole(e.target.value)}>
-                  <option value="">Select Role</option>
-                  <option value="Employer">Employer</option>
-                  <option value="Job Seeker">Job Seeker</option>
-                </select>
-                <FaRegUser />
-              </div>
-            </div>
-            <div className="inputTag">
-              <label>Name</label>
-              <div>
-                <input
-                  type="text"
-                  placeholder="Zeeshan"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-                <FaPencilAlt />
-              </div>
-            </div>
-            <div className="inputTag">
-              <label>Email Address</label>
-              <div>
-                <input
-                  type="email"
-                  placeholder="zk@gmail.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <MdOutlineMailOutline />
-              </div>
-            </div>
-            <div className="inputTag">
-              <label>Phone Number</label>
-              <div>
-                <input
-                  type="number"
-                  placeholder="12345678"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-                <FaPhoneFlip />
-              </div>
-            </div>
-            <div className="inputTag">
-              <label>Password</label>
-              <div>
-                <input
-                  type="password"
-                  placeholder="Your Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <RiLock2Fill />
-              </div>
-            </div>
-            <button type="submit" onClick={handleRegister}>
-              Register
-            </button>
-            <Link to={"/login"}>Login Now</Link>
-          </form>
+      <section className="grid place-items-center min-h-screen bg-gray-100 px-4">
+  <div className="bg-white p-8 rounded-md shadow-md w-full max-w-md">
+    {/* Logo and Header */}
+    <div className="flex flex-col items-center mb-6">
+      <img
+        src={Employhub}
+        alt="Employee Hub Logo"
+        className="w-[55%] h-[30%] mb-2"
+      />
+      <h3 className="text-xl font-bold text-blue-900 text-center">
+        Create a new account
+      </h3>
+    </div>
+
+    {/* Register Form */}
+    <form className="flex flex-col gap-5">
+      {/* Register As */}
+      <div className="flex flex-col">
+        <label className="mb-1 text-gray-700 font-medium">Register As</label>
+        <div className="flex items-center border rounded-md overflow-hidden">
+          <select
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            className="p-3 flex-1 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">Select Role</option>
+            <option value="Employer">Employer</option>
+            <option value="Job Seeker">Job Seeker</option>
+          </select>
+          <FaRegUser className="text-gray-500 p-3" />
         </div>
-        <div className="banner">
-          <img src="/register.png" alt="login" />
+      </div>
+
+      {/* Name */}
+      <div className="flex flex-col">
+        <label className="mb-1 text-gray-700 font-medium">Name</label>
+        <div className="flex items-center border rounded-md overflow-hidden">
+          <input
+            type="text"
+            placeholder="Zeeshan"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="p-3 flex-1 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <FaPencilAlt className="text-gray-500 p-3" />
         </div>
-      </section>
+      </div>
+
+      {/* Email Address */}
+      <div className="flex flex-col">
+        <label className="mb-1 text-gray-700 font-medium">Email Address</label>
+        <div className="flex items-center border rounded-md overflow-hidden">
+          <input
+            type="email"
+            placeholder="zk@gmail.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="p-3 flex-1 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <MdOutlineMailOutline className="text-gray-500 p-3" />
+        </div>
+      </div>
+
+      {/* Phone Number */}
+      <div className="flex flex-col">
+        <label className="mb-1 text-gray-700 font-medium">Phone Number</label>
+        <div className="flex items-center border rounded-md overflow-hidden">
+          <input
+            type="number"
+            placeholder="12345678"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className="p-3 flex-1 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <FaPhoneFlip className="text-gray-500 p-3" />
+        </div>
+      </div>
+
+      {/* Password */}
+      <div className="flex flex-col">
+        <label className="mb-1 text-gray-700 font-medium">Password</label>
+        <div className="flex items-center border rounded-md overflow-hidden">
+          <input
+            type="password"
+            placeholder="Your Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="p-3 flex-1 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <RiLock2Fill className="text-gray-500 p-3" />
+        </div>
+      </div>
+
+      {/* Submit Button */}
+      <button
+        type="submit"
+        onClick={handleRegister}
+        className="py-3 bg-blue-900 text-white font-bold rounded-md hover:bg-blue-800"
+      >
+        Register
+      </button>
+
+      {/* Login Link */}
+      <Link
+        to="/login"
+        className="py-3 text-center font-bold text-blue-900 border border-blue-900 rounded-md hover:bg-blue-100"
+      >
+        Login Now
+      </Link>
+    </form>
+  </div>
+</section>
+
     </>
   );
 };
