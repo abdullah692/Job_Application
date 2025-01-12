@@ -115,35 +115,35 @@ const Register = () => {
               <label className="mb-1 text-gray-700 font-medium">Phone Number</label>
               <input
                 type="number"
-                placeholder=" "
+                placeholder="123456789"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 className="p-3 border rounded-md bg-gray-100  "
               />
-            </div> 
+            </div>
             {/* Password */}
-                        <div className="relative">
-                          <label className="mb-1 text-gray-700 font-medium">Password</label>
-                          <input
-                            type={showPassword ? "text" : "password"}
-                            placeholder="Your Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="p-3 border rounded-md bg-gray-100 focus:outline-none w-full"
-                          />
-                          {/* Eye Icon */}
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute pt-6 right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-                          >
-                            {showPassword ? (
-                              <AiFillEye className="w-6 h-6" />
-                            ) : (
-                              <AiFillEyeInvisible className="w-6 h-6" />
-                            )}
-                          </button>
-                        </div>
+            <div className="relative">
+              <label className="mb-1 text-gray-700 font-medium">Password</label>
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Your Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="p-3 border rounded-md bg-gray-100 focus:outline-none w-full"
+              />
+              {/* Eye Icon */}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute pt-6 right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+              >
+                {showPassword ? (
+                  <AiFillEye className="w-6 h-6" />
+                ) : (
+                  <AiFillEyeInvisible className="w-6 h-6" />
+                )}
+              </button>
+            </div>
 
             {/* Submit Button */}
             <button

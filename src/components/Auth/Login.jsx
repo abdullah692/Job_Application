@@ -3,12 +3,13 @@ import { MdOutlineMailOutline } from "react-icons/md";
 import { RiLock2Fill } from "react-icons/ri";
 import { Link, Navigate } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
-import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { Context } from "../../main";
 import Employhub from '../../assets/images/employee.png'
 import { Form, Input, Button, Select } from 'antd';
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { loginUser } from "../../slices/authSlice";
 
 const { Option } = Select;
 
@@ -21,24 +22,51 @@ const Login = () => {
 
   const { isAuthorized, setIsAuthorized } = useContext(Context);
 
+  const dispatch = useDispatch();
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post(
-        "http://localhost:4000/api/v1/user/login",
-        { email, password, role },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-      toast.success(data.message);
-      setEmail("");
-      setPassword("");
-      setRole("");
-      setIsAuthorized(true);
+      console.log("ee", e);
+      console.log(role, "role");
+      console.log(email, "email");
+      console.log(password, "password");
+
+
+      // const { data } = await axios.post(
+      //   "http://localhost:4000/api/v1/user/login",
+      //   { email, password, role },
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     withCredentials: true,
+      //   }
+      // );
+      const payload = {
+        email,
+        password,
+        role
+      }
+      dispatch(loginUser(payload))
+        .unwrap()
+        .then((x) => {
+          console.log("zzzzzz", x);
+          console.log("Login successful:", x);
+          toast.success(x.message)
+
+
+        }).catch((error) => {
+          console.error("Login failed:", error);
+          toast.error(error);
+          // Display error message to the user
+          // Update state with the error message
+        });
+
+      // toast.success(data.message);
+      // setEmail("");
+      // setPassword("");
+      // setRole("");
+      // setIsAuthorized(true);
     } catch (error) {
       toast.error(error.response.data.message);
     }

@@ -9,6 +9,8 @@
 //   </StrictMode>,
 // )
 import React, { createContext, useState } from "react";
+import {Provider} from 'react-redux'
+import {store} from './store.jsx'
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import './index.css'; // Import Tailwind styles
@@ -23,16 +25,19 @@ const AppWrapper = () => {
   const [user, setUser] = useState({});
 
   return (
-    <Context.Provider
-      value={{
-        isAuthorized,
-        setIsAuthorized,
-        user,
-        setUser,
-      }}
-    >
-      <App />
-    </Context.Provider>
+    // <Context.Provider
+    //   value={{
+    //     isAuthorized,
+    //     setIsAuthorized,
+    //     user,
+    //     setUser,
+    //   }}
+    // >
+    //   <App />
+    // </Context.Provider>
+    <Provider store={store}>
+      <App/>
+    </Provider>
   );
 };
 
