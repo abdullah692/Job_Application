@@ -120,7 +120,7 @@ const Register = () => {
                 onChange={(e) => setPhone(e.target.value)}
                 className="p-3 border rounded-md bg-gray-100  "
               />
-            </div>
+            </div> 
             {/* Password */}
                         <div className="relative">
                           <label className="mb-1 text-gray-700 font-medium">Password</label>
