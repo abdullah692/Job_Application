@@ -1,8 +1,7 @@
 import React, { useContext, useState } from "react";
 import { MdOutlineMailOutline } from "react-icons/md";
 import { RiLock2Fill } from "react-icons/ri";
-import { Link, Navigate } from "react-router-dom";
-import { FaRegUser } from "react-icons/fa";
+import { Link, Navigate,useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { Context } from "../../main";
@@ -23,6 +22,8 @@ const Login = () => {
   const { isAuthorized, setIsAuthorized } = useContext(Context);
 
   const dispatch = useDispatch();
+  const navigateTo = useNavigate();
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -53,7 +54,7 @@ const Login = () => {
           console.log("zzzzzz", x);
           console.log("Login successful:", x);
           toast.success(x.message)
-
+          return <Navigate to={'/'} />
 
         }).catch((error) => {
           console.error("Login failed:", error);
@@ -114,7 +115,7 @@ const Login = () => {
               <label className="mb-1 text-gray-700 font-medium">Email Address</label>
               <input
                 type="email"
-                placeholder="zk@gmail.com"
+                placeholder="test@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="p-3 border rounded-md bg-gray-100 focus:outline-none "

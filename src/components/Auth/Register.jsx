@@ -5,11 +5,12 @@ import { RiLock2Fill } from "react-icons/ri";
 import { FaPencilAlt } from "react-icons/fa";
 import { FaPhoneFlip } from "react-icons/fa6";
 import { Link, Navigate } from "react-router-dom";
-import axios from "axios";
+import { registerUser } from "../../slices/authSlice";
 import toast from "react-hot-toast";
 import { Context } from "../../main";
 import Employhub from '../../assets/images/employee.png'
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { useDispatch,useSelector } from "react-redux";
 
 
 const Register = () => {
@@ -22,29 +23,34 @@ const Register = () => {
 
   const { isAuthorized, setIsAuthorized, user, setUser } = useContext(Context);
 
+
+  const dispatch = useDispatch();
+
   const handleRegister = async (e) => {
     e.preventDefault();
-    try {
-      const { data } = await axios.post(
-        "http://localhost:4000/api/v1/user/register",
-        { name, phone, email, role, password },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-      toast.success(data.message);
-      setName("");
-      setEmail("");
-      setPassword("");
-      setPhone("");
-      setRole("");
-      setIsAuthorized(true);
-    } catch (error) {
-      toast.error(error.response.data.message);
+    const payload = {
+      name, phone, email, role, password
     }
+    console.log(payload,"registerpayload");
+    
+    dispatch(registerUser(payload))
+      .unwrap()
+      .then((x) => {
+        console.log("zzzzzz", x);
+        console.log("Register successful:", x);
+        toast.success(x.message);
+          setName("");
+          setEmail("");
+          setPassword("");
+          setPhone("");
+          setRole("");
+          // setIsAuthorized(true);
+
+      }).catch((error) => {
+        console.log("error.response",error);
+        
+        toast.error(error);
+      });
   };
 
   if (isAuthorized) {
@@ -90,7 +96,7 @@ const Register = () => {
               <label className="mb-1 text-gray-700 font-medium">Name</label>
               <input
                 type="text"
-                placeholder="Jack"
+                placeholder="Jack Black"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="p-3 border rounded-md bg-gray-100 focus:outline-none "

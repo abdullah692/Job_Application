@@ -32,6 +32,32 @@ export const loginUser = createAsyncThunk(
   );
 
 
+  
+export const registerUser = createAsyncThunk(
+  'auth/registerUser',
+  async (credentials, { rejectWithValue }) => {
+    try {
+      console.log("credentials",credentials);
+      debugger
+      const response = await axios.post(
+          `${import.meta.env.VITE_JOB_APP_API_URL}/api/users/registerUser`,credentials,
+          {
+              withCredentials: true,  // If needed for cookies or session management
+            }
+        )
+        console.log('Api Resaaaaaaaaaxxxxxxx', response)
+        return response?.data
+    } catch (error) {
+      if (error.response && error.response.data) {
+          return rejectWithValue(error.response.data.message); // Pass error message
+        }
+        return rejectWithValue(error.message); // Handle other errors (e.g., network)
+      }
+    
+  }
+);
+
+
 const authSlice=createSlice({
     name:"auth",
     initialState,
