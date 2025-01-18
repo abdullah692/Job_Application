@@ -54,7 +54,7 @@ const Login = () => {
           console.log("zzzzzz", x);
           console.log("Login successful:", x);
           toast.success(x.message)
-          return <Navigate to={'/'} />
+          navigateTo("/")
 
         }).catch((error) => {
           console.error("Login failed:", error);
