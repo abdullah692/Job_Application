@@ -58,6 +58,31 @@ export const registerUser = createAsyncThunk(
 );
 
 
+  
+export const getAllJobs = createAsyncThunk(
+  'auth/getAllJobs',
+  async (data,{ rejectWithValue }) => {
+    try {
+// debugger
+      const response = await axios.get(
+          `${import.meta.env.VITE_JOB_APP_API_URL}/api/getAllJobs`,
+          {
+              withCredentials: true,  // If needed for cookies or session management
+            }
+        )
+        console.log('Api Resaaaaaaaaaxxxxxxx', response)
+        return response?.data
+    } catch (error) {
+      if (error.response && error.response.data) 
+        return rejectWithValue(error.message); // Handle other errors (e.g., network)
+      }
+    
+  }
+);
+
+
+
+
 const authSlice=createSlice({
     name:"auth",
     initialState,
