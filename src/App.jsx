@@ -1,23 +1,4 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-// import './App.css'
-
-// function App() {
-//   const [count, setCount] = useState(0)
-
-//   return (
-//     <>
-      
-//       <h1 className="text-3xl font-bold underline  text-blue-600">
-//       Hello world!
-//     </h1>
-//     </>
-//   )
-// }
-
-// export default App
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./index.css"
 import './App.css'
 import { Context } from "./main";
@@ -36,9 +17,17 @@ import MyApplications from "./components/Application/MyApplications";
 import PostJob from "./components/Job/PostJob";
 import NotFound from "./components/NotFound/NotFound";
 import MyJobs from "./components/Job/MyJobs";
+import { useDispatch,useSelector } from "react-redux";
+import { getCurrentUser } from "./slices/authSlice";
+
 
 const App = () => {
-  const { isAuthorized, setIsAuthorized, setUser } = useContext(Context);
+  const dispatch=useDispatch();
+  const isAuthorized = useSelector((state) => state.auth.isAuthorized);
+  console.log("isAuthorized",isAuthorized);
+  
+  // const [isAuthorized,setIsAuthorized]=useState(false)
+  // const { isAuthorized, setIsAuthorized, setUser } = useContext(Context);
   // useEffect(() => {
   //   const fetchUser = async () => {
   //     try {
@@ -56,6 +45,35 @@ const App = () => {
   //   };
   //   fetchUser();
   // }, [isAuthorized]);
+
+  // const fetchUser=()=>{
+  //   try {
+  //     debugger
+  //     dispatch(getCurrentUser())
+  //       .unwrap().then((x) => {
+  //         if (x.success == true) {
+  //           dispatch(checkUser({ 
+  //             isAuthorized: true, 
+  //             user: x.user // Assuming `user` is part of the response
+  //           }));
+  //         }
+  //       })
+  //       .catch((error) => {
+  //       console.log("error",error);
+        
+  //       })
+       
+
+  //   } catch (error) {
+  //     console.log("error",error);
+      
+  //   }
+  // }
+
+
+  // useEffect(()=>{
+  //   fetchUser();
+  // },[isAuthorized])
 
   return (
     <>

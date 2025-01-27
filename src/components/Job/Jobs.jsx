@@ -16,11 +16,10 @@ const { isAuthorized } = useContext(Context);
 
   let hasErrorToastShown = false;
   const handleJobs = () => {
-    debugger
+    
     try {
       dispatch(getAllJobs())
         .unwrap().then((x) => {
-          console.log("jobs", x);
           if (x.message == "All Jobs fetched successfully!!") {
             setJobs(x.jobs)
             setIsLoading(false)
@@ -28,7 +27,6 @@ const { isAuthorized } = useContext(Context);
         })
         .catch((error) => {
           if (!hasErrorToastShown) {
-            console.log("errors", error);
             toast.error(error);
             hasErrorToastShown = true; // Prevent further error toasts
           }

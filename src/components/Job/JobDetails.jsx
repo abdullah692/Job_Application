@@ -1,26 +1,61 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import axios from "axios";
+import { getJobById } from "../../slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../../main";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 const JobDetails = () => {
   const { id } = useParams();
   const [job, setJob] = useState({});
   const navigateTo = useNavigate();
+  const dispatch = useDispatch();
+
 
   const { isAuthorized, user } = useContext(Context);
 
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:4000/api/v1/job/${id}`, {
+  //       withCredentials: true,
+  //     })
+  //     .then((res) => {
+  //       setJob(res.data.job);
+  //     })
+  //     .catch((error) => {
+  //       navigateTo("/notfound");
+  //     });
+  // }, []);
+  let hasErrorToastShown = false;
+  const handleJobs = () => {
+    try {
+      dispatch(getJobById(id))
+        .unwrap().then((x) => {
+          console.log("jobs", x);
+          if (x.success == true) {
+            setJob(x.job)
+            // setIsLoading(false)
+          }
+        })
+        .catch((error) => {
+          if (!hasErrorToastShown) {
+            console.log("errors", error);
+            toast.error(error);
+            hasErrorToastShown = true; // Prevent further error toasts
+          }
+        })
+
+    } catch (error) {
+      console.log("error", error);
+      toast.error(error)
+      // setHasFetched(true);
+      // setIsLoading(false)
+    }
+  }
+
+
   useEffect(() => {
-    axios
-      .get(`http://localhost:4000/api/v1/job/${id}`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        setJob(res.data.job);
-      })
-      .catch((error) => {
-        navigateTo("/notfound");
-      });
+    handleJobs()
   }, []);
 
   if (!isAuthorized) {
