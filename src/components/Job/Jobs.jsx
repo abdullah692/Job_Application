@@ -21,6 +21,8 @@ const Jobs = () => {
       dispatch(getAllJobs())
         .unwrap().then((x) => {
           if (x.message == "All Jobs fetched successfully!!") {
+            console.log("xjobxs",x);
+            
             setJobs(x.jobs)
             setIsLoading(false)
           }
