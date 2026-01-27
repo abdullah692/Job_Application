@@ -13,6 +13,7 @@ import {Provider} from 'react-redux'
 import {store} from './store.jsx'
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
+import { BrowserRouter } from "react-router-dom";
 import './index.css'; // Import Tailwind styles
 
 // Create a context
@@ -21,22 +22,11 @@ export const Context = createContext({
 });
 
 const AppWrapper = () => {
-  const [isAuthorized, setIsAuthorized] = useState(false);
-  const [user, setUser] = useState({});
-
   return (
-    // <Context.Provider
-    //   value={{
-    //     isAuthorized,
-    //     setIsAuthorized,
-    //     user,
-    //     setUser,
-    //   }}
-    // >
-    //   <App />
-    // </Context.Provider>
     <Provider store={store}>
+      <BrowserRouter>
       <App/>
+      </BrowserRouter>
     </Provider>
   );
 };

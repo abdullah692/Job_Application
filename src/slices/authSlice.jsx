@@ -1,10 +1,12 @@
 import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import axios from 'axios'
+import { FaS } from 'react-icons/fa6';
 
 const initialState = {
   token: '',
   user: {},
-  isAuthorized:false
+  isAuthorized: false,
+  loading: true
 }
 
 
@@ -154,20 +156,32 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(loginUser.pending, (state, action) => {
+        state.loading = true;
+      })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isAuthorized = true;
-        state.user = action.payload; // Set the user data after successful loginz
+        state.user = action.payload;
+        state.loading = false
+        // Set the user data after successful loginz
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.error = action.payload;
+        state.loading = false
+      })
+      .addCase(getCurrentUser.pending, (state) => {
+        state.loading = true;
       })
       .addCase(getCurrentUser.fulfilled, (state, action) => {
         state.isAuthorized = true;
         state.user = action.payload;
+        state.loading=false
       })
       .addCase(getCurrentUser.rejected, (state, action) => {
         state.isAuthorized = false;
         state.error = action.payload || 'Error fetching user.';
+        state.user=null
+        state.loading=false
       });
   },
 
