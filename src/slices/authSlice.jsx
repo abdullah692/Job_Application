@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import axios from 'axios'
+import axiosInstance from '../api/axiosInstance';
 import { FaS } from 'react-icons/fa6';
 
 const initialState = {
@@ -17,9 +18,12 @@ export const getCurrentUser = createAsyncThunk(
     try {
       debugger
       const response = await axios.get(
-        `${import.meta.env.VITE_JOB_APP_API_URL}/api/users/current`,
+        // `${import.meta.env.VITE_JOB_APP_API_URL}/api/users/current`,
+        `http://localhost:5000/api/users/current`,
         {
-          withCredentials: true,  // If needed for cookies or session management
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       )
       console.log('Api Resaaaaaaaaaxxxxxxx', response)
@@ -38,11 +42,11 @@ export const loginUser = createAsyncThunk(
     try {
       console.log("credentials", credentials);
 
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `${import.meta.env.VITE_JOB_APP_API_URL}/api/users/login`, credentials,
-        {
-          withCredentials: true,  // If needed for cookies or session management
-        }
+        // {
+        //   withCredentials: true,  // If needed for cookies or session management
+        // }
       )
       console.log('Api Resaaaaaaaaaxxxxxxx', response)
       return response?.data
@@ -163,6 +167,7 @@ const authSlice = createSlice({
         state.isAuthorized = true;
         state.user = action.payload;
         state.loading = false
+        state.token = action.payload.token
         // Set the user data after successful loginz
       })
       .addCase(loginUser.rejected, (state, action) => {
@@ -175,13 +180,13 @@ const authSlice = createSlice({
       .addCase(getCurrentUser.fulfilled, (state, action) => {
         state.isAuthorized = true;
         state.user = action.payload;
-        state.loading=false
+        state.loading = false
       })
       .addCase(getCurrentUser.rejected, (state, action) => {
         state.isAuthorized = false;
         state.error = action.payload || 'Error fetching user.';
-        state.user=null
-        state.loading=false
+        state.user = null
+        state.loading = false
       });
   },
 

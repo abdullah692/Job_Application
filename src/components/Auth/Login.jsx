@@ -43,6 +43,7 @@ const Login = () => {
       //     withCredentials: true,
       //   }
       // );
+      debugger
       const payload = {
         email,
         password,
@@ -52,6 +53,7 @@ const Login = () => {
         .unwrap()
         .then((x) => {
           console.log("zzzzzz", x);
+          debugger
           console.log("Login successful:", x);
           toast.success(x.message)
           navigateTo("/")
@@ -102,7 +104,7 @@ const Login = () => {
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                className="p-3 border rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="p-3 border rounded-md bg-gray-100 focus:outline-none  "
               >
                 <option value="">Select Role</option>
                 <option value="Employer">Employer</option>

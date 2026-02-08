@@ -9,6 +9,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
+        debugger
         if (error.response?.status == 401) {
             console.log("Unauthorized - redirecting to login");
             window.location.href = '/login'
