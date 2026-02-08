@@ -12,18 +12,24 @@ function ProtectedRoute({ children }) {
 
     if (loading) return null;
 
-    if (!isAuthorized) {
-        toast.error("Login first to access  this page")
-        return (
-            <Navigate
-                to="/login"
-                replace
-                state={{ from: location }}
-            />
-        );
-    }
+    // if (!isAuthorized) {
+    //     toast.error("Login first to access  this page")
+    //     return (
+    //         <Navigate
+    //             to="/login"
+    //             replace
+    //             state={{ from: location }}
+    //         />
+    //     );
+    // }
 
-    return children
+    // return children
+    debugger
+     if (!isAuthorized) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
 
 
 }

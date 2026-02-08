@@ -13,28 +13,17 @@ const initialState = {
 
 
 export const getCurrentUser = createAsyncThunk(
-  'auth/getCurrentUser',
-  async (id, { rejectWithValue }) => {
+  "auth/getCurrentUser",
+  async (_, { rejectWithValue }) => {
     try {
-      debugger
-      const response = await axios.get(
-        // `${import.meta.env.VITE_JOB_APP_API_URL}/api/users/current`,
-        `http://localhost:5000/api/users/current`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      console.log('Api Resaaaaaaaaaxxxxxxx', response)
-      return response?.data
+      const response = await axiosInstance.get("/api/users/current");
+      return response.data;
     } catch (error) {
-      if (error.response && error.response.data)
-        return rejectWithValue(error.message); // Handle other errors (e.g., network)
+      return rejectWithValue(error.response?.data?.message || error.message);
     }
-
   }
 );
+
 
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
@@ -43,7 +32,8 @@ export const loginUser = createAsyncThunk(
       console.log("credentials", credentials);
 
       const response = await axiosInstance.post(
-        `${import.meta.env.VITE_JOB_APP_API_URL}/api/users/login`, credentials,
+          "/api/users/login"
+        , credentials,
         // {
         //   withCredentials: true,  // If needed for cookies or session management
         // }
@@ -168,6 +158,7 @@ const authSlice = createSlice({
         state.user = action.payload;
         state.loading = false
         state.token = action.payload.token
+         localStorage.setItem("token", action.payload.token);
         // Set the user data after successful loginz
       })
       .addCase(loginUser.rejected, (state, action) => {

@@ -28,11 +28,15 @@ const App = () => {
   const dispatch = useDispatch();
   const { loading } = useSelector(state => state.auth);
 
-  // 🔥 TOKEN CHECK ON APP LOAD
-  useEffect(() => {
-    dispatch(getCurrentUser());
-  }, [dispatch]);
+useEffect(() => {
+  const token = localStorage.getItem("token");
 
+  if (token) {
+    dispatch(getCurrentUser()); // only fetch user if token exists
+  } else {
+    window.location.href = "/login"; // redirect if no token
+  }
+}, [dispatch]);
 
 
   if (loading) return null;

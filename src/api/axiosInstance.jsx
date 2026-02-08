@@ -2,8 +2,24 @@ import axios from "axios";
 
 const axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_JOB_APP_API_URL,
-    withCredentials: true
+    // withCredentials: true
 })
+
+axiosInstance.interceptors.request.use(
+    (config) => {
+        debugger
+        const token = localStorage.getItem("token");
+        console.log("tokenLocal",token);
+        
+
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`
+        }
+
+        return config
+    },
+    (error) => Promise.reject(error)
+)
 
 
 axiosInstance.interceptors.response.use(
@@ -12,6 +28,7 @@ axiosInstance.interceptors.response.use(
         debugger
         if (error.response?.status == 401) {
             console.log("Unauthorized - redirecting to login");
+            localStorage.removeItem('token')
             window.location.href = '/login'
 
         }
