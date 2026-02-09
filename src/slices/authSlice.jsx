@@ -7,7 +7,7 @@ const initialState = {
   token: '',
   user: {},
   isAuthorized: false,
-  loading: true
+  loading: false
 }
 
 
@@ -19,6 +19,8 @@ export const getCurrentUser = createAsyncThunk(
       const response = await axiosInstance.get("/api/users/current");
       return response.data;
     } catch (error) {
+      console.log("error.response",error.response);
+      
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   }

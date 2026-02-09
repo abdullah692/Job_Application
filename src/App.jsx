@@ -28,18 +28,19 @@ const App = () => {
   const dispatch = useDispatch();
   const { loading } = useSelector(state => state.auth);
 
-useEffect(() => {
-  const token = localStorage.getItem("token");
+  useEffect(() => {
+    const token = localStorage.getItem("token");
 
-  if (token) {
-    dispatch(getCurrentUser()); // only fetch user if token exists
-  } else {
-    window.location.href = "/login"; // redirect if no token
-  }
-}, [dispatch]);
+    if (token) {
+      dispatch(getCurrentUser()); // only fetch user if token exists
+    }
+    //  else {
+    //   window.location.href = "/login"; // redirect if no token
+    // }
+  }, [dispatch]);
 
 
-  if (loading) return null;
+  // if (loading) return null;
 
   return (
     <>
@@ -47,13 +48,23 @@ useEffect(() => {
 
       <Routes>
         {/* Public */}
-        <Route path="/" element={<Home />} />
+        {/* <Route path="/" element={<Home />} /> */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/job/getall" element={<Jobs />} />
         <Route path="/job/:id" element={<JobDetails />} />
 
         {/* Protected */}
+
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/application/:id"
           element={
