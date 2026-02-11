@@ -32,6 +32,7 @@ const App = () => {
     const token = localStorage.getItem("token");
 
     if (token) {
+      
       dispatch(getCurrentUser()); // only fetch user if token exists
     }
     //  else {
