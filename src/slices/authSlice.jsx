@@ -84,13 +84,10 @@ export const getAllJobs = createAsyncThunk(
   'auth/getAllJobs',
   async (data, { rejectWithValue }) => {
     try {
-      // debugger
-      const response = await axios.get(
-        `${import.meta.env.VITE_JOB_APP_API_URL}/api/getAllJobs`,
-        {
-          withCredentials: true,  // If needed for cookies or session management
-        }
-      )
+      debugger
+      const response = await axiosInstance.post(
+          "/api/getAllJobs"
+        , credentials,)
       console.log('Api Resaaaaaaaaaxxxxxxx', response)
       return response?.data
     } catch (error) {

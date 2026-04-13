@@ -32,7 +32,7 @@ const App = () => {
     const token = localStorage.getItem("token");
 
     if (token) {
-      
+
       dispatch(getCurrentUser()); // only fetch user if token exists
     }
     //  else {
@@ -46,7 +46,12 @@ const App = () => {
   return (
     <>
       <Navbar />
-
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 2000,
+        }}
+      />
       <Routes>
         {/* Public */}
         {/* <Route path="/" element={<Home />} /> */}
