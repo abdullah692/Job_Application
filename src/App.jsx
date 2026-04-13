@@ -35,10 +35,8 @@ const App = () => {
 
       dispatch(getCurrentUser()); // only fetch user if token exists
     }
-    //  else {
-    //   window.location.href = "/login"; // redirect if no token
-    // }
-  }, [dispatch]);
+   
+  }, []);
 
 
   // if (loading) return null;
@@ -57,7 +55,7 @@ const App = () => {
         {/* <Route path="/" element={<Home />} /> */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/job/getall" element={<Jobs />} />
+        {/* <Route path="/job/getall" element={<Jobs />} /> */}
         <Route path="/job/:id" element={<JobDetails />} />
 
         {/* Protected */}
@@ -67,6 +65,15 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Home />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/job/getall"
+          element={
+            <ProtectedRoute>
+              <Jobs />
             </ProtectedRoute>
           }
         />

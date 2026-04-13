@@ -7,12 +7,10 @@ function ProtectedRoute({ children }) {
 debugger
     const { isAuthorized, loading } = useSelector((state) => state.auth)
     
-    // if (loading) return null;
-     if (!isAuthorized) {
-    return <Navigate to="/login" replace />;
-  }
+  //  if (loading) return <div>Loading...</div>; // or spinner
 
-  return children;
+  return isAuthorized ? children : <Navigate to="/login" replace />;
+  // return children;
 
 
 }

@@ -7,7 +7,8 @@ const initialState = {
   token: '',
   user: {},
   isAuthorized: false,
-  loading: false
+  loading: true,
+  checkingAuth: true
 }
 
 
@@ -19,8 +20,8 @@ export const getCurrentUser = createAsyncThunk(
       const response = await axiosInstance.get("/api/users/current");
       return response.data;
     } catch (error) {
-      console.log("error.response",error.response);
-      
+      console.log("error.response", error.response);
+
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
@@ -34,7 +35,7 @@ export const loginUser = createAsyncThunk(
       console.log("credentials", credentials);
 
       const response = await axiosInstance.post(
-          "/api/users/login"
+        "/api/users/login"
         , credentials,
         // {
         //   withCredentials: true,  // If needed for cookies or session management
@@ -82,12 +83,11 @@ export const registerUser = createAsyncThunk(
 
 export const getAllJobs = createAsyncThunk(
   'auth/getAllJobs',
-  async (data, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       debugger
-      const response = await axiosInstance.post(
-          "/api/getAllJobs"
-        , credentials,)
+      const response = await axiosInstance.get(
+        "/api/getAllJobs")
       console.log('Api Resaaaaaaaaaxxxxxxx', response)
       return response?.data
     } catch (error) {
@@ -146,6 +146,11 @@ const authSlice = createSlice({
       state.isAuthorized = action.payload.isAuthorized;
       state.user = action.payload.user;
     },
+    setAuthFinished: (state) => {
+      debugger
+      state.checkingAuth = false;
+      state.isAuthorized = false;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -157,7 +162,7 @@ const authSlice = createSlice({
         state.user = action.payload;
         state.loading = false
         state.token = action.payload.token
-         localStorage.setItem("token", action.payload.token);
+        localStorage.setItem("token", action.payload.token);
         // Set the user data after successful loginz
       })
       .addCase(loginUser.rejected, (state, action) => {
@@ -165,18 +170,20 @@ const authSlice = createSlice({
         state.loading = false
       })
       .addCase(getCurrentUser.pending, (state) => {
-        state.loading = true;
+        state.checkingAuth = true;
       })
       .addCase(getCurrentUser.fulfilled, (state, action) => {
+        console.log("action.payload.user;", action.payload);
+
         state.isAuthorized = true;
-        state.user = action.payload;
-        state.loading = false
+        state.user = action.payload.user;
+        state.checkingAuth = false
       })
       .addCase(getCurrentUser.rejected, (state, action) => {
         state.isAuthorized = false;
         state.error = action.payload || 'Error fetching user.';
         state.user = null
-        state.loading = false
+        state.checkingAuth = false
       });
   },
 
