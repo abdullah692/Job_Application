@@ -106,43 +106,86 @@ const JobDetails = () => {
     //     </div>
     //   </div>
     // </section>
-<section className="py-8 bg-gray-100 min-h-screen">
-  <div className="mx-10 px-4 sm:px-6 lg:px-8">
+
+<section className="bg-gray-50 min-h-screen py-10">
+  <div className="max-w-4xl mx-auto px-4">
+
     {job ? (
-      <div className=" mx-auto bg-white shadow-lg rounded-lg p-6 md:p-8 w-full">
-        <h3 className="text-2xl font-bold text-gray-800 text-center mb-4">
-          Job Details
-        </h3>
-        <div className="space-y-3 text-gray-700">
-          <p><strong>Title:</strong> <span className="text-blue-900">{job.title}</span></p>
-          <p><strong>Category:</strong> {job.category}</p>
-          <p><strong>Country:</strong> {job.country}</p>
-          <p><strong>City:</strong> {job.city}</p>
-          <p><strong>Location:</strong> {job.location}</p>
-          <p><strong>Description:</strong> {job.description}</p>
-          <p><strong>Job Posted On:</strong> {job.jobPostedOn}</p>
-          <p><strong>Salary:</strong> {job.fixedSalary ? job.fixedSalary : `${job.salaryFrom} - ${job.salaryTo}`}</p>
+      <div className="bg-white shadow-md rounded-xl p-6 md:p-8">
+
+        {/* Header */}
+        <div className="border-b pb-4 mb-4">
+          <h2 className="text-2xl md:text-3xl font-semibold text-gray-800">
+            {job.title}
+          </h2>
+
+          <div className="flex flex-wrap items-center gap-4 mt-2 text-gray-600 text-sm">
+            <div className="flex items-center gap-1">
+              <MdWork />
+              <span>{job.category}</span>
+            </div>
+
+            <div className="flex items-center gap-1">
+              <MdLocationOn />
+              <span>{job.city}, {job.country}</span>
+            </div>
+          </div>
         </div>
 
-        {/* {user && user.role !== "Employer" && ( */}
-          <div className="mt-6 text-center">
-            <Link
-              to={`/application/${job._id}`}
-              className="inline-block bg-blue-900 text-white px-6 py-3 rounded-md text-lg  hover:bg-blue-700 transition"
-            >
-              Apply Now
-            </Link>
+        {/* Info Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+
+          <div className="flex items-center gap-2">
+            <MdLocationOn className="text-blue-900" />
+            <span><strong>Location:</strong> {job.location}</span>
           </div>
-        {/* )} */}
+
+          <div className="flex items-center gap-2">
+            <MdAttachMoney className="text-blue-900" />
+            <span>
+              <strong>Salary:</strong>{" "}
+              {job.fixedSalary
+                ? job.fixedSalary
+                : `${job.salaryFrom} - ${job.salaryTo}`}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <MdDateRange className="text-blue-900" />
+            <span><strong>Posted:</strong> {job.jobPostedOn}</span>
+          </div>
+
+        </div>
+
+        {/* Description */}
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-2">
+            Job Description
+          </h3>
+          <p className="text-gray-600 leading-relaxed">
+            {job.description}
+          </p>
+        </div>
+
+        {/* Button */}
+        <div className="mt-8 text-center">
+          <Link
+            to={`/application/${job._id}`}
+            className="bg-blue-900 text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-blue-700 transition shadow-sm"
+          >
+            Apply Now
+          </Link>
+        </div>
+
       </div>
     ) : (
-      <div className="text-center mt-10">
-        <p className="text-xl text-gray-600">🔍 Job not found!</p>
+      <div className="text-center mt-20">
+        <p className="text-xl text-gray-500">🔍 Job not found</p>
       </div>
     )}
+
   </div>
 </section>
-
   );
 };
 
