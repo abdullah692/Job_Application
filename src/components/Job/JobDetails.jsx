@@ -7,12 +7,14 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 const JobDetails = () => {
   const { id } = useParams();
-  const [job, setJob] = useState({});
+  console.log("id",id);
+  
+  const [job, setJob] = useState(null);
   const navigateTo = useNavigate();
   const dispatch = useDispatch();
 
 
-  const { isAuthorized, user } = useContext(Context);
+  // const { isAuthorized, user } = useContext(Context);
 
   // useEffect(() => {
   //   axios
@@ -29,6 +31,7 @@ const JobDetails = () => {
   let hasErrorToastShown = false;
   const handleJobs = () => {
     try {
+      debugger
       dispatch(getJobById(id))
         .unwrap().then((x) => {
           console.log("jobs", x);
@@ -55,58 +58,15 @@ const JobDetails = () => {
 
 
   useEffect(() => {
-    handleJobs()
-  }, []);
+    if(id) handleJobs()
+  }, [id]);
 
-  if (!isAuthorized) {
-    navigateTo("/login");
-  }
+  // if (!isAuthorized) {
+  //   navigateTo("/login");
+  // }
 
   return (
-    // <section className="jobDetail page">
-    //   <div className="container">
-    //     <h3>Job Details</h3>
-    //     <div className="banner">
-    //       <p>
-    //         Title: <span> {job.title}</span>
-    //       </p>
-    //       <p>
-    //         Category: <span>{job.category}</span>
-    //       </p>
-    //       <p>
-    //         Country: <span>{job.country}</span>
-    //       </p>
-    //       <p>
-    //         City: <span>{job.city}</span>
-    //       </p>
-    //       <p>
-    //         Location: <span>{job.location}</span>
-    //       </p>
-    //       <p>
-    //         Description: <span>{job.description}</span>
-    //       </p>
-    //       <p>
-    //         Job Posted On: <span>{job.jobPostedOn}</span>
-    //       </p>
-    //       <p>
-    //         Salary:{" "}
-    //         {job.fixedSalary ? (
-    //           <span>{job.fixedSalary}</span>
-    //         ) : (
-    //           <span>
-    //             {job.salaryFrom} - {job.salaryTo}
-    //           </span>
-    //         )}
-    //       </p>
-    //       {user && user.role === "Employer" ? (
-    //         <></>
-    //       ) : (
-    //         <Link to={`/application/${job._id}`}>Apply Now</Link>
-    //       )}
-    //     </div>
-    //   </div>
-    // </section>
-
+   
 <section className="bg-gray-50 min-h-screen py-10">
   <div className="max-w-4xl mx-auto px-4">
 
@@ -116,18 +76,18 @@ const JobDetails = () => {
         {/* Header */}
         <div className="border-b pb-4 mb-4">
           <h2 className="text-2xl md:text-3xl font-semibold text-gray-800">
-            {job.title}
+            {/* {job.title} */}
           </h2>
 
           <div className="flex flex-wrap items-center gap-4 mt-2 text-gray-600 text-sm">
             <div className="flex items-center gap-1">
               <MdWork />
-              <span>{job.category}</span>
+              {/* <span>{job.category}</span> */}
             </div>
 
             <div className="flex items-center gap-1">
               <MdLocationOn />
-              <span>{job.city}, {job.country}</span>
+              {/* <span>{job.city}, {job.country}</span> */}
             </div>
           </div>
         </div>
@@ -137,22 +97,24 @@ const JobDetails = () => {
 
           <div className="flex items-center gap-2">
             <MdLocationOn className="text-blue-900" />
-            <span><strong>Location:</strong> {job.location}</span>
+            <span><strong>Location:</strong>
+             {/* {job.location} */}
+             </span>
           </div>
 
           <div className="flex items-center gap-2">
             <MdAttachMoney className="text-blue-900" />
-            <span>
+            {/* <span>
               <strong>Salary:</strong>{" "}
               {job.fixedSalary
                 ? job.fixedSalary
                 : `${job.salaryFrom} - ${job.salaryTo}`}
-            </span>
+            </span> */}
           </div>
 
           <div className="flex items-center gap-2">
             <MdDateRange className="text-blue-900" />
-            <span><strong>Posted:</strong> {job.jobPostedOn}</span>
+            {/* <span><strong>Posted:</strong> {job.jobPostedOn}</span> */}
           </div>
 
         </div>
@@ -163,7 +125,7 @@ const JobDetails = () => {
             Job Description
           </h3>
           <p className="text-gray-600 leading-relaxed">
-            {job.description}
+            {/* {job.description} */}
           </p>
         </div>
 

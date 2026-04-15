@@ -104,19 +104,12 @@ export const getJobById = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       debugger
-      const response = await axios.get(
-        `http://localhost:5000/api/getJob/${id}`,
-
-        // `${import.meta.env.VITE_JOB_APP_API_URL}/api/getJob/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NjVhM2U2ZjVjMGI4MDEwMmU4YzFlNSIsInJvbGUiOiJFbXBsb3llciIsImlhdCI6MTczODAxMjkzNywiZXhwIjoxNzM4MDEyOTk3fQ.n5keeP49OaJ4Q0eLrrrQyicLrMTKTinayRFFUH3Goj8`, // Add Authorization header
-          },
-          withCredentials: true, // If cookies are required
-        }
-      )
+      console.log("idslice",id);
+      
+        const response = await axiosInstance.get(
+        `/api/getJob/${id}`)
       console.log('Api Resaaaaaaaaaxxxxxxx', response)
-      return response?.data
+      return response?.data 
     } catch (error) {
       if (error.response && error.response.data) {
         return rejectWithValue(error.response.data.message); // Pass error message
