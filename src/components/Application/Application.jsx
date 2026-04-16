@@ -62,56 +62,84 @@ const Application = () => {
   }
 
   return (
-    <section className="application">
-      <div className="container">
-        <h3>Application Form</h3>
-        <form onSubmit={handleApplication}>
-          <input
-            type="text"
-            placeholder="Your Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <input
-            type="email"
-            placeholder="Your Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="number"
-            placeholder="Your Phone Number"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Your Address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-          />
-          <textarea
-            placeholder="CoverLetter..."
-            value={coverLetter}
-            onChange={(e) => setCoverLetter(e.target.value)}
-          />
-          <div>
-            <label
-              style={{ textAlign: "start", display: "block", fontSize: "20px" }}
-            >
-              Select Resume
-            </label>
-            <input
-              type="file"
-              accept=".pdf, .jpg, .png"
-              onChange={handleFileChange}
-              style={{ width: "100%" }}
-            />
-          </div>
-          <button type="submit">Send Application</button>
-        </form>
+    <section className="min-h-screen bg-gray-100 flex items-center justify-center py-10">
+  <div className="w-full max-w-2xl bg-white shadow-xl rounded-2xl p-8">
+    
+    <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">
+      Application Form
+    </h2>
+
+    <form onSubmit={handleApplication} className="space-y-5">
+
+      {/* Name */}
+      <input
+        type="text"
+        placeholder="Your Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+
+      {/* Email */}
+      <input
+        type="email"
+        placeholder="Your Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+
+      {/* Phone */}
+      <input
+        type="number"
+        placeholder="Your Phone Number"
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
+        className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+
+      {/* Address */}
+      <input
+        type="text"
+        placeholder="Your Address"
+        value={address}
+        onChange={(e) => setAddress(e.target.value)}
+        className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+
+      {/* Cover Letter */}
+      <textarea
+        placeholder="Cover Letter..."
+        value={coverLetter}
+        onChange={(e) => setCoverLetter(e.target.value)}
+        rows="4"
+        className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+
+      {/* File Upload */}
+      <div>
+        <label className="block text-gray-700 font-medium mb-2">
+          Upload Resume
+        </label>
+        <input
+          type="file"
+          accept=".pdf,.jpg,.png"
+          onChange={handleFileChange}
+          className="w-full border p-2 rounded-xl bg-gray-50"
+        />
       </div>
-    </section>
+
+      {/* Button */}
+      <button
+        type="submit"
+        className="w-full  bg-blue-900 text-white py-3 rounded-xl font-semibold hover:bg-blue-500 transition duration-300"
+      >
+        Send Application
+      </button>
+
+    </form>
+  </div>
+</section>
   );
 };
 
