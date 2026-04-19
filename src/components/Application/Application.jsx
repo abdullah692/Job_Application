@@ -11,17 +11,40 @@ const Application = () => {
   const [address, setAddress] = useState("");
   const [resume, setResume] = useState(null);
 
+  const [values, setValues] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    coverLetter: "",
+    file: null,
+  });
+
   const { isAuthorized, user } = useContext(Context);
 
   const navigateTo = useNavigate();
 
   // Function to handle file input changes
-  const handleFileChange = (event) => {
-    const resume = event.target.files[0];
-    setResume(resume);
+  const handleFileChange = (e) => {
+    setValues((prev) => ({
+      ...prev,
+      file: e.target.files[0], // 👈 actual file
+    }));
   };
 
+  console.log("values",values);
+  
+
   const { id } = useParams();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+  
+    setValues((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
   const handleApplication = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -53,13 +76,15 @@ const Application = () => {
       toast.success(data.message);
       navigateTo("/job/getall");
     } catch (error) {
+      console.log("error.response",error.response);
+      
       toast.error(error.response.data.message);
     }
   };
 
-  if (!isAuthorized || (user && user.role === "Employer")) {
-    navigateTo("/");
-  }
+  // if (!isAuthorized || (user && user.role === "Employer")) {
+  //   navigateTo("/");
+  // }
 
   return (
     <section className="min-h-screen bg-gray-100 flex items-center justify-center py-10">
@@ -75,8 +100,9 @@ const Application = () => {
       <input
         type="text"
         placeholder="Your Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        name="name"
+        value={values.name}
+        onChange={handleChange}
         className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
 
@@ -84,8 +110,9 @@ const Application = () => {
       <input
         type="email"
         placeholder="Your Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        value={values.email}
+        name="email"
+        onChange={handleChange}
         className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
 
@@ -93,8 +120,9 @@ const Application = () => {
       <input
         type="number"
         placeholder="Your Phone Number"
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
+        name="phone"
+        value={values.phone}
+        onChange={handleChange}
         className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
 
@@ -102,16 +130,18 @@ const Application = () => {
       <input
         type="text"
         placeholder="Your Address"
-        value={address}
-        onChange={(e) => setAddress(e.target.value)}
+        value={values.address}
+        name="address"
+        onChange={handleChange}
         className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
 
       {/* Cover Letter */}
       <textarea
         placeholder="Cover Letter..."
-        value={coverLetter}
-        onChange={(e) => setCoverLetter(e.target.value)}
+        name="coverLetter"
+        value={values.coverLetter}
+        onChange={handleChange}
         rows="4"
         className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
