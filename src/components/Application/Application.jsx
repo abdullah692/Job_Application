@@ -15,6 +15,7 @@ const Application = () => {
   // const [address, setAddress] = useState("");
   // const [resume, setResume] = useState(null);
   const dispatch = useDispatch();
+  const { id } = useParams();
 
 
   const [values, setValues] = useState({
@@ -24,9 +25,9 @@ const Application = () => {
     address: "",
     coverLetter: "",
     file: null,
+    jobId:id
   });
 
-  const { isAuthorized, user } = useContext(Context);
 
   const navigateTo = useNavigate();
 
@@ -41,7 +42,6 @@ const Application = () => {
   console.log("values",values);
   
 
-  const { id } = useParams();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,10 +54,10 @@ const Application = () => {
   const handleApplication = async (e) => {
 
     try {
-         const payload = {
-            values
-          }
-          dispatch(postApplication(payload))
+          dispatch(postApplication({
+            ...values,
+            jobId: id
+          }))
             .unwrap()
             .then((x) => {
               console.log("zzzzzz", x);
