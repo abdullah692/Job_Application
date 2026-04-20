@@ -52,19 +52,22 @@ const Application = () => {
     }));
   };
   const handleApplication = async (e) => {
-
+    e.preventDefault(); 
     try {
+        //  const payload = {
+        //     values
+        //   }
           dispatch(postApplication({
             ...values,
-            jobId: id
+            jobId:id
           }))
             .unwrap()
             .then((x) => {
               console.log("zzzzzz", x);
               debugger
               console.log("App SUbmitted", x);
-              // toast.success(x.message)
-              // navigateTo("/")
+              toast.success(x.message)
+              navigateTo("/")
     
             }).catch((error) => {
               console.error("App SUbmitted failed:", error);
@@ -79,12 +82,7 @@ const Application = () => {
       
     }
   }
-     debugger
-         
-
-  // if (!isAuthorized || (user && user.role === "Employer")) {
-  //   navigateTo("/");
-  // }
+     
 
   return (
     <section className="min-h-screen bg-gray-100 flex items-center justify-center py-10">

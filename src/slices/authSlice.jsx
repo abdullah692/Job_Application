@@ -126,17 +126,17 @@ export const postApplication = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       const formData = new FormData();
-
+debugger
       console.log("data", data);
 
       //      Object.keys(data.values).forEach((key) => {
       //   formData.append(key, data.values[key]); // ✅ correct
       // });
-      Object.keys(data.values).forEach((key) => {
+      Object.keys(data).forEach((key) => {
         if (key === "file") {
-          formData.append("resume", data.values.file); // 👈 backend-friendly name
+          formData.append("resume", data.file); // 👈 backend-friendly name
         } else {
-          formData.append(key, data.values[key]);
+          formData.append(key, data[key]);
         }
       });
 
@@ -184,6 +184,7 @@ const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
+        debugger
         state.isAuthorized = true;
         state.user = action.payload;
         state.loading = false
