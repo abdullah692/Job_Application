@@ -3,13 +3,19 @@ import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { Context } from "../../main";
+import { postApplication } from "../../slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+
+
 const Application = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [coverLetter, setCoverLetter] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
-  const [resume, setResume] = useState(null);
+  // const [name, setName] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [coverLetter, setCoverLetter] = useState("");
+  // const [phone, setPhone] = useState("");
+  // const [address, setAddress] = useState("");
+  // const [resume, setResume] = useState(null);
+  const dispatch = useDispatch();
+
 
   const [values, setValues] = useState({
     name: "",
@@ -46,41 +52,35 @@ const Application = () => {
     }));
   };
   const handleApplication = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("email", email);
-    formData.append("phone", phone);
-    formData.append("address", address);
-    formData.append("coverLetter", coverLetter);
-    formData.append("resume", resume);
-    formData.append("jobId", id);
 
     try {
-      const { data } = await axios.post(
-        "http://localhost:4000/api/v1/application/post",
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      setName("");
-      setEmail("");
-      setCoverLetter("");
-      setPhone("");
-      setAddress("");
-      setResume("");
-      toast.success(data.message);
-      navigateTo("/job/getall");
-    } catch (error) {
-      console.log("error.response",error.response);
+         const payload = {
+            values
+          }
+          dispatch(postApplication(payload))
+            .unwrap()
+            .then((x) => {
+              console.log("zzzzzz", x);
+              debugger
+              console.log("App SUbmitted", x);
+              // toast.success(x.message)
+              // navigateTo("/")
+    
+            }).catch((error) => {
+              console.error("App SUbmitted failed:", error);
+              toast.error(error);
+              // Display error message to the user
+              // Update state with the error message
+            });
+    
       
-      toast.error(error.response.data.message);
+    } catch (error) {
+        toast.error(error);
+      
     }
-  };
+  }
+     debugger
+         
 
   // if (!isAuthorized || (user && user.role === "Employer")) {
   //   navigateTo("/");
@@ -118,7 +118,7 @@ const Application = () => {
 
       {/* Phone */}
       <input
-        type="number"
+        type="tel"
         placeholder="Your Phone Number"
         name="phone"
         value={values.phone}

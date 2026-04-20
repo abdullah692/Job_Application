@@ -104,12 +104,12 @@ export const getJobById = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       debugger
-      console.log("idslice",id);
-      
-        const response = await axiosInstance.get(
+      console.log("idslice", id);
+
+      const response = await axiosInstance.get(
         `/api/getJob/${id}`)
       console.log('Api Resaaaaaaaaaxxxxxxx', response)
-      return response?.data 
+      return response?.data
     } catch (error) {
       if (error.response && error.response.data) {
         return rejectWithValue(error.response.data.message); // Pass error message
@@ -117,6 +117,39 @@ export const getJobById = createAsyncThunk(
       return rejectWithValue(error.message) // Handle other errors (e.g., network)
     }
 
+  }
+);
+
+
+export const postApplication = createAsyncThunk(
+  "auth/postApplication",
+  async (data, { rejectWithValue }) => {
+    try {
+      const formData = new FormData();
+
+      console.log("data", data);
+
+      //      Object.keys(data.values).forEach((key) => {
+      //   formData.append(key, data.values[key]); // ✅ correct
+      // });
+      Object.keys(data.values).forEach((key) => {
+        if (key === "file") {
+          formData.append("resume", data.values.file); // 👈 backend-friendly name
+        } else {
+          formData.append(key, data.values[key]);
+        }
+      });
+
+      console.log("formData", formData);
+
+      const res = await axiosInstance.post("/api/application", formData);
+
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data || err.message
+      );
+    }
   }
 );
 
