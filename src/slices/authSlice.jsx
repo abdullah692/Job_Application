@@ -55,18 +55,17 @@ export const loginUser = createAsyncThunk(
 
 
 
+
 export const registerUser = createAsyncThunk(
   'auth/registerUser',
   async (credentials, { rejectWithValue }) => {
     try {
       console.log("credentials", credentials);
       debugger
-      const response = await axios.post(
-        `${import.meta.env.VITE_JOB_APP_API_URL}/api/users/registerUser`, credentials,
-        {
-          withCredentials: true,  // If needed for cookies or session management
-        }
-      )
+
+      const response = await axiosInstance.post(
+        "/api/users/registerUser"
+        , credentials,)
       console.log('Api Resaaaaaaaaaxxxxxxx', response)
       return response?.data
     } catch (error) {
@@ -78,7 +77,6 @@ export const registerUser = createAsyncThunk(
 
   }
 );
-
 
 
 export const getAllJobs = createAsyncThunk(

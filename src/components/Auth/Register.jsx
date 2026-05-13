@@ -14,41 +14,66 @@ import { useDispatch,useSelector } from "react-redux";
 
 
 const Register = () => {
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
+
+  
+  const dispatch = useDispatch();
+
+
   const [showPassword, setShowPassword] = useState("");
 
-  const { isAuthorized, setIsAuthorized, user, setUser } = useContext(Context);
 
 
-  const dispatch = useDispatch();
+  const [regValues, setRegValues] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    role:''
+  });
+
+
+  // const { isAuthorized, setIsAuthorized, user, setUser } = useContext(Context);
+
+
+    const { isAuthorized, setIsAuthorized } = useContext(Context);
+  
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+  
+    setRegValues((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // console.log("regValujes",regValues);
+  
 
   const handleRegister = async (e) => {
     e.preventDefault();
     const payload = {
       name, phone, email, role, password
     }
-    console.log(payload,"registerpayload");
-    
+    console.log(payload, "registerpayload");
+
     dispatch(registerUser(payload))
       .unwrap()
       .then((x) => {
         console.log("zzzzzz", x);
         console.log("Register successful:", x);
         toast.success(x.message);
-          setName("");
-          setEmail("");
-          setPassword("");
-          setPhone("");
-          setRole("");
-          // setIsAuthorized(true);
+       setRegValues({
+        name:'',
+        email:'',
+        phone:'',
+        password:'',
+        role:'',
+       })
+        // setIsAuthorized(true);
 
       }).catch((error) => {
-        console.log("error.response",error);
-        
+        console.log("error.response", error);
+
         toast.error(error);
       });
   };
@@ -80,8 +105,9 @@ const Register = () => {
             <div className="flex flex-col">
               <label className="mb-1 text-gray-700 font-medium">Register As</label>
               <select
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
+                name="role"
+                value={regValues.role}
+                onChange={handleChange}
                 className="p-3 border rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">Select Role</option>
@@ -97,8 +123,9 @@ const Register = () => {
               <input
                 type="text"
                 placeholder="Jack Black"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                name="name"
+                value={regValues.name}
+                onChange={handleChange}
                 className="p-3 border rounded-md bg-gray-100 focus:outline-none "
               />
             </div>
@@ -109,8 +136,11 @@ const Register = () => {
               <input
                 type="email"
                 placeholder="test@gmail.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                // value={email}
+                // onChange={(e) => setEmail(e.target.value)}
+                name="email"
+                value={regValues.email}
+                onChange={handleChange}
                 className="p-3 border rounded-md bg-gray-100 focus:outline-none "
               />
             </div>
@@ -120,10 +150,11 @@ const Register = () => {
             <div className="flex flex-col">
               <label className="mb-1 text-gray-700 font-medium">Phone Number</label>
               <input
-                type="number"
+                type="tell"
                 placeholder="123456789"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                name="phone"
+                value={regValues.phone}
+                onChange={handleChange}
                 className="p-3 border rounded-md bg-gray-100  "
               />
             </div>
@@ -133,8 +164,9 @@ const Register = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Your Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                name="password"
+                value={regValues.password}
+                onChange={handleChange}
                 className="p-3 border rounded-md bg-gray-100 focus:outline-none w-full"
               />
               {/* Eye Icon */}
@@ -154,7 +186,7 @@ const Register = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              onClick={handleRegister}
+              // onClick={handleRegister}
               className="py-3 bg-blue-900 text-white font-bold rounded-md hover:bg-blue-800"
             >
               Register
@@ -176,3 +208,5 @@ const Register = () => {
 };
 
 export default Register;
+
+
