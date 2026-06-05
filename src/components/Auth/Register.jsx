@@ -10,12 +10,12 @@ import toast from "react-hot-toast";
 import { Context } from "../../main";
 import Employhub from '../../assets/images/employee.png'
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 
 const Register = () => {
 
-  
+
   const dispatch = useDispatch();
 
 
@@ -28,59 +28,49 @@ const Register = () => {
     email: "",
     phone: "",
     password: "",
-    role:''
+    role: ''
   });
 
 
-  // const { isAuthorized, setIsAuthorized, user, setUser } = useContext(Context);
 
-
-    const { isAuthorized, setIsAuthorized } = useContext(Context);
-  
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
+
     setRegValues((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  // console.log("regValujes",regValues);
-  
+
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    const payload = {
-      name, phone, email, role, password
+
+    try {
+      const payload = { ...regValues };
+      dispatch(registerUser(payload))
+        .unwrap()
+        .then((x) => {
+          console.log("zzzzzz", x);
+          toast.success(x.message);
+          navigateTo("/login")
+          setRegValues({
+            name: '',
+            email: '',
+            phone: '',
+            password: '',
+            role: '',
+          })
+        }).catch((error) => {
+          console.log("error.response", error);
+
+          toast.error(error);
+        });
+    } catch (error) {
+      toast.error(error);
     }
-    console.log(payload, "registerpayload");
-
-    dispatch(registerUser(payload))
-      .unwrap()
-      .then((x) => {
-        console.log("zzzzzz", x);
-        console.log("Register successful:", x);
-        toast.success(x.message);
-       setRegValues({
-        name:'',
-        email:'',
-        phone:'',
-        password:'',
-        role:'',
-       })
-        // setIsAuthorized(true);
-
-      }).catch((error) => {
-        console.log("error.response", error);
-
-        toast.error(error);
-      });
   };
-
-  if (isAuthorized) {
-    return <Navigate to={'/'} />
-  }
 
 
   return (
@@ -186,7 +176,7 @@ const Register = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              // onClick={handleRegister}
+              onClick={handleRegister}
               className="py-3 bg-blue-900 text-white font-bold rounded-md hover:bg-blue-800"
             >
               Register
