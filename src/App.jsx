@@ -43,7 +43,7 @@ const App = () => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <Toaster
         position="top-right"
         toastOptions={{
