@@ -12,6 +12,8 @@ const Navbar = () => {
   // const { isAuthorized, setIsAuthorized, user } = useContext(Context);
 
     const { isAuthorized, user } = useSelector((state) => state.auth)
+    console.log("user",user);
+    
 
   const navigateTo = useNavigate();
 
@@ -54,7 +56,11 @@ const Navbar = () => {
           : "hidden lg:flex"
       } items-center gap-6`}
     >
-      <li>
+
+      {
+        user.role == "Employer" ? (
+          <>
+          <li>
         <Link
           to="/"
           onClick={() => setShow(false)}
@@ -74,41 +80,69 @@ const Navbar = () => {
         </Link>
       </li>
 
+
+      <li>
+        <Link
+          to="/job/getall"
+          onClick={() => setShow(false)}
+          className="text-[#184235] lg:text-[#f1f3f6] text-md font-semibold lg:font-light hover:text-[#2d5649] transition"
+        >
+          POST JOBS
+        </Link>
+      </li>
+
+      <li>
+        <Link
+          to="/job/getall"
+          onClick={() => setShow(false)}
+          className="text-[#184235] lg:text-[#f1f3f6] text-md font-semibold lg:font-light hover:text-[#2d5649] transition"
+        >
+          MY JOBS
+        </Link>
+      </li>
+
+
       <li>
         <Link
           to="/applications/me"
           onClick={() => setShow(false)}
           className="text-[#184235] lg:text-[#f1f3f6] text-md font-semibold lg:font-light hover:text-[#2d5649] transition"
         >
-          {user?.role === "Employer"
-            ? "APPLICANTS"
-            : "MY APPLICATIONS"}
+           "APPLICANTS"
+        </Link>
+      </li>
+          </>
+
+        ) : (
+
+          <>
+          
+      <li>
+        <Link
+          to="/job/getall"
+          onClick={() => setShow(false)}
+          className="text-[#184235] lg:text-[#f1f3f6] text-md font-semibold lg:font-light hover:text-[#2d5649] transition"
+        >
+          ALL JOBS
         </Link>
       </li>
 
-      {user?.role === "Employer" && (
-        <>
-          <li>
-            <Link
-              to="/job/post"
-              onClick={() => setShow(false)}
-              className="text-[#184235] lg:text-[#f1f3f6] text-md font-semibold lg:font-light hover:text-[#2d5649] transition"
-            >
-              POST JOB
-            </Link>
-          </li>
+      <li>
+        <Link
+          to="/applications/me"
+          onClick={() => setShow(false)}
+          className="text-[#184235] lg:text-[#f1f3f6] text-md font-semibold lg:font-light hover:text-[#2d5649] transition"
+        >
+            : "MY APPLICATIONS"
+        </Link>
+      </li>
+          
+          </>
+        )
+      }
+      
 
-          <li>
-            <Link
-              to="/job/me"
-              onClick={() => setShow(false)}
-              className="text-[#184235] lg:text-[#f1f3f6] text-md font-semibold lg:font-light hover:text-[#2d5649] transition"
-            >
-              MY JOBS
-            </Link>
-          </li>
-        </>
-      )}
+     
 
       <button
         onClick={handleLogout}
