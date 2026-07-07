@@ -10,13 +10,6 @@ import { getAllJobs } from "../../slices/authSlice";
 
 
 const MyJobs = () => {
-  const [myJobs, setMyJobs] = useState([]);
-  const [editingMode, setEditingMode] = useState(null);
-  const { isAuthorized, user } = useContext(Context);
-
-  const dispatch = useDispatch()
-
-  const navigateTo = useNavigate();
   const data = [
     {
       _id: "1",
@@ -47,6 +40,14 @@ const MyJobs = () => {
       location: "Gulberg, Lahore",
     },
   ];
+  const [myJobs, setMyJobs] = useState(data);
+  const [editingMode, setEditingMode] = useState(null);
+  const { isAuthorized, user } = useContext(Context);
+
+  const dispatch = useDispatch()
+
+  const navigateTo = useNavigate();
+
   //Fetching all jobs
   // useEffect(() => {
   //   const fetchJobs = async () => {
@@ -84,10 +85,10 @@ const MyJobs = () => {
   }
 
   console.log({
-  isAuthorized,
-  user,
-  editingMode,
-},"check update");
+    isAuthorized,
+    user,
+    editingMode,
+  }, "check update");
 
 
   // useEffect(() => {
@@ -142,6 +143,7 @@ const MyJobs = () => {
 
   const handleInputChange = (jobId, field, value) => {
     // Update the job object in the jobs state with the new value
+    debugger
     setMyJobs((prevJobs) =>
       prevJobs.map((job) =>
         job._id === jobId ? { ...job, [field]: value } : job
@@ -424,7 +426,7 @@ const MyJobs = () => {
         <h1 className="text-3xl font-bold mb-8">Your Posted Jobs</h1>
 
         <div className="grid gap-6">
-          {data.map((job) => (
+          {myJobs.map((job) => (
             <div
               key={job._id}
               className="bg-white rounded-xl shadow-md p-6 border border-gray-200"
@@ -436,7 +438,10 @@ const MyJobs = () => {
                   </label>
                   <input
                     value={job.title}
-                    disabled
+                    disabled={editingMode != job._id}
+                    onChange={(e) =>
+                      handleInputChange(job._id, "title", e.target.value)
+                    }
                     className="w-full mt-1 border rounded-lg px-3 py-2 bg-gray-50"
                   />
                 </div>
@@ -447,7 +452,8 @@ const MyJobs = () => {
                   </label>
                   <input
                     value={job.category}
-                    disabled
+                    disabled={editingMode != job._id}
+                    onChange={(e) => handleInputChange(job._id, "category", e.target.value)}
                     className="w-full mt-1 border rounded-lg px-3 py-2 bg-gray-50"
                   />
                 </div>
@@ -458,7 +464,8 @@ const MyJobs = () => {
                   </label>
                   <input
                     value={job.country}
-                    disabled
+                    disabled={editingMode != job._id}
+                    onChange={(e) => handleInputChange(job._id, "country", e.target.value)}
                     className="w-full mt-1 border rounded-lg px-3 py-2 bg-gray-50"
                   />
                 </div>
@@ -469,7 +476,8 @@ const MyJobs = () => {
                   </label>
                   <input
                     value={job.city}
-                    disabled
+                    disabled={editingMode != job._id}
+                    onChange={(e) => handleInputChange(job._id, "city", e.target.value)}
                     className="w-full mt-1 border rounded-lg px-3 py-2 bg-gray-50"
                   />
                 </div>
@@ -482,19 +490,22 @@ const MyJobs = () => {
                   {job.fixedSalary ? (
                     <input
                       value={`Rs. ${job.fixedSalary}`}
-                      disabled
+                      disabled={editingMode != job._id}
+                      onChange={(e) => handleInputChange(job._id, "fixedSalary", e.target.value)}
                       className="w-full mt-1 border rounded-lg px-3 py-2 bg-gray-50"
                     />
                   ) : (
                     <div className="flex gap-3 mt-1">
                       <input
                         value={job.salaryFrom}
-                        disabled
+                        disabled={editingMode != job._id}
+                        onChange={(e) => handleInputChange(job._id, "salaryFrom", e.target.value)}
                         className="w-full border rounded-lg px-3 py-2 bg-gray-50"
                       />
                       <input
                         value={job.salaryTo}
-                        disabled
+                        disabled={editingMode != job._id}
+                        onChange={(e) => handleInputChange(job._id, "salaryTo", e.target.value)}
                         className="w-full border rounded-lg px-3 py-2 bg-gray-50"
                       />
                     </div>
@@ -509,8 +520,8 @@ const MyJobs = () => {
                   <div className="mt-2">
                     <span
                       className={`px-3 py-1 rounded-full text-sm font-medium ${job.expired
-                          ? "bg-red-100 text-red-600"
-                          : "bg-green-100 text-green-600"
+                        ? "bg-red-100 text-red-600"
+                        : "bg-green-100 text-green-600"
                         }`}
                     >
                       {job.expired ? "Expired" : "Active"}
@@ -527,7 +538,8 @@ const MyJobs = () => {
                 <textarea
                   rows={4}
                   value={job.description}
-                  disabled
+                  disabled={editingMode != job._id}
+                  onChange={(e) => handleInputChange(job._id, "description", e.target.value)}
                   className="w-full mt-1 border rounded-lg px-3 py-2 bg-gray-50 resize-none"
                 />
               </div>
@@ -540,14 +552,15 @@ const MyJobs = () => {
                 <textarea
                   rows={2}
                   value={job.location}
-                  disabled
+                  disabled={editingMode != job._id}
+                  onChange={(e) => handleInputChange(job._id, "location", e.target.value)}
                   className="w-full mt-1 border rounded-lg px-3 py-2 bg-gray-50 resize-none"
                 />
               </div>
 
               <div className="flex justify-end gap-4 mt-6">
-                <button className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg" 
-                onClick={()=>handleEnableEdit(job._id)}>
+                <button className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+                  onClick={() => handleEnableEdit(job._id)}>
                   Edit
                 </button>
 
