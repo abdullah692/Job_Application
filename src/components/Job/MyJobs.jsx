@@ -518,14 +518,34 @@ const MyJobs = () => {
                   </label>
 
                   <div className="mt-2">
-                    <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${job.expired
-                        ? "bg-red-100 text-red-600"
-                        : "bg-green-100 text-green-600"
-                        }`}
-                    >
-                      {job.expired ? "Expired" : "Active"}
-                    </span>
+
+                    {editingMode === job._id ? (
+                      <select
+                        value={job.expired.toString()}
+                        onChange={(e) =>
+                          handleInputChange(
+                            job._id,
+                            "expired",
+                            e.target.value === "true"
+                          )
+                        }
+                        className="w-full mt-1 border rounded-lg px-3 py-2 bg-gray-50"
+                      >
+                        <option value="false">Active</option>
+                        <option value="true">Expired</option>
+                      </select>
+                    ) : (
+                      <div className="mt-2">
+                        <span
+                          className={`px-3 py-1 rounded-full text-sm font-medium ${job.expired
+                            ? "bg-red-100 text-red-600"
+                            : "bg-green-100 text-green-600"
+                            }`}
+                        >
+                          {job.expired ? "Expired" : "Active"}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -557,7 +577,7 @@ const MyJobs = () => {
                   className="w-full mt-1 border rounded-lg px-3 py-2 bg-gray-50 resize-none"
                 />
               </div>
-
+              {/* 
               <div className="flex justify-end gap-4 mt-6">
                 <button className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
                   onClick={() => handleEnableEdit(job._id)}>
@@ -567,6 +587,42 @@ const MyJobs = () => {
                 <button className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg">
                   Delete
                 </button>
+              </div> */}
+
+              <div className="flex gap-3">
+                {editingMode === job._id ? (
+                  <>
+                    <button
+                      onClick={() => handleUpdateJob(job._id)}
+                      className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+                    >
+                      Save
+                    </button>
+
+                    <button
+                      onClick={handleDisableEdit}
+                      className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                    >
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => handleEnableEdit(job._id)}
+                      className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      onClick={() => handleDeleteJob(job._id)}
+                      className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+                    >
+                      Delete
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           ))}
