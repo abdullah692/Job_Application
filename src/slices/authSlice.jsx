@@ -18,8 +18,8 @@ export const getCurrentUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get("/api/users/current");
-      console.log("current User",response);
-      
+      console.log("current User", response);
+
       return response.data;
     } catch (error) {
       console.log("error.response", error.response);
@@ -99,6 +99,40 @@ export const getAllJobs = createAsyncThunk(
 );
 
 
+
+export const getEmployerJobs = createAsyncThunk(
+  'auth/getJobs',
+  async (_, { rejectWithValue }) => {
+    try {
+      debugger
+      const response = await axiosInstance.get(
+        "/api/getJobs")
+      console.log('Api Resaaaaaaaaaxxxxxxx', response)
+      return response?.data
+    } catch (error) {
+      debugger
+      // Backend returned an error (400, 401, 403, 404, 500)
+      if (error.response) {
+        return rejectWithValue(error.response.data.message);
+      }
+
+      // Request was sent but no response (server down, internet issue)
+      if (error.request) {
+        return rejectWithValue(
+          "Unable to connect to the server. Please check your internet connection."
+        );
+      }
+
+      // Something else happened
+      return rejectWithValue(
+        error.message || "Something went wrong."
+      );
+
+    }
+  }
+);
+
+
 export const getJobById = createAsyncThunk(
   'auth/getJobById',
   async (id, { rejectWithValue }) => {
@@ -126,7 +160,7 @@ export const postApplication = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       const formData = new FormData();
-debugger
+      debugger
       console.log("data", data);
 
       //      Object.keys(data.values).forEach((key) => {
