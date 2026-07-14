@@ -113,6 +113,8 @@ export const getEmployerJobs = createAsyncThunk(
       debugger
       // Backend returned an error (400, 401, 403, 404, 500)
       if (error.response) {
+        console.log("error message",error.response);
+        
         return rejectWithValue(error.response.data.message);
       }
 
