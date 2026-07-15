@@ -7,6 +7,8 @@ import { Context } from "../../main";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getEmployerJobs } from "../../slices/authSlice";
+import { ClipLoader, DotLoader } from "react-spinners";
+
 
 
 const MyJobs = () => {
@@ -74,11 +76,12 @@ const MyJobs = () => {
 
       await dispatch(getEmployerJobs())
         .unwrap().then((x) => {
-          if (x.message == "All Jobs fetched successfully!!") {
-            console.log("xjobxs", x);
+          console.log("xjobxs", x);
+          if (x.message == "Jobs fetched successfully!") {
 
-            setMyJobs(x.jobs)
+            setMyJobs(x.jobPostedBy)
             setMessage('')
+      setIsLoading(false)
 
             setIsLoading(false)
           }
@@ -181,7 +184,18 @@ const MyJobs = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-7xl mx-auto">
-        {message ? (
+
+        {/* Heading */}
+        {!isLoading && myJobs.length > 0 && (
+          <h1 className="text-3xl font-bold mb-8">Your Posted Jobs</h1>
+        )}
+
+        {/* Loader */}
+        {isLoading ? (
+          <div className="absolute inset-0 bg-gray-200/40 flex justify-center items-center z-10">
+            <ClipLoader color="#1D2084" size={60} />
+          </div>
+        ) : message ? (
           <div className="flex flex-col items-center justify-center h-64">
             <h2 className="text-2xl font-semibold text-gray-600">
               {message}
@@ -192,10 +206,7 @@ const MyJobs = () => {
             </p>
           </div>
         ) : (
-
           <>
-            <h1 className="text-3xl font-bold mb-8">Your Posted Jobs</h1>
-
             <div className="grid gap-6">
               {myJobs.map((job) => (
                 <div
