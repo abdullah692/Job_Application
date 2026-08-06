@@ -51,6 +51,7 @@ const MyJobs = () => {
 
   const dispatch = useDispatch()
 
+  let originalJob='';
   const navigateTo = useNavigate();
 
   //Fetching all jobs
@@ -118,6 +119,10 @@ const MyJobs = () => {
   //Function For Enabling Editing Mode
   const handleEnableEdit = (jobId) => {
     //Here We Are Giving Id in setEditingMode because We want to enable only that job whose ID has been send.
+    originalJob = myJobs.find((job) => job._id === jobId);
+    console.log("editOriginal",originalJob);
+    
+
     setEditingMode(jobId);
   };
 
