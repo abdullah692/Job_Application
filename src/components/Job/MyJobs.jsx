@@ -43,8 +43,8 @@ const MyJobs = () => {
     },
   ];
   const [myJobs, setMyJobs] = useState([]);
-  const [message, setMessage] = useState(null)
   const [editingMode, setEditingMode] = useState(null);
+  const [message, setMessage] = useState(null)
   const [isLoading, setIsLoading] = useState(true);
 
   const { isAuthorized, user } = useContext(Context);
@@ -81,7 +81,7 @@ const MyJobs = () => {
 
             setMyJobs(x.jobPostedBy)
             setMessage('')
-      setIsLoading(false)
+            setIsLoading(false)
 
             setIsLoading(false)
           }
@@ -126,36 +126,6 @@ const MyJobs = () => {
     setEditingMode(null);
   };
 
-  // //Function For Updating The Job
-  // const handleUpdateJob = async (jobId) => {
-  //   const updatedJob = myJobs.find((job) => job._id === jobId);
-  //   await axios
-  //     .put(`http://localhost:4000/api/v1/job/update/${jobId}`, updatedJob, {
-  //       withCredentials: true,
-  //     })
-  //     .then((res) => {
-  //       toast.success(res.data.message);
-  //       setEditingMode(null);
-  //     })
-  //     .catch((error) => {
-  //       toast.error(error.response.data.message);
-  //     });
-  // };
-
-  // //Function For Deleting Job
-  // const handleDeleteJob = async (jobId) => {
-  //   await axios
-  //     .delete(`http://localhost:4000/api/v1/job/delete/${jobId}`, {
-  //       withCredentials: true,
-  //     })
-  //     .then((res) => {
-  //       toast.success(res.data.message);
-  //       setMyJobs((prevJobs) => prevJobs.filter((job) => job._id !== jobId));
-  //     })
-  //     .catch((error) => {
-  //       toast.error(error.response.data.message);
-  //     });
-  // };
 
 
   console.log("message", message);
@@ -171,14 +141,25 @@ const MyJobs = () => {
   };
 
   const handleUpdateJob = (jobId) => {
-    console.log(
-      "Updated Job:",
-      myJobs.find((job) => job._id === jobId)
-    );
 
-    toast.success("Job updated successfully!");
 
-    setEditingMode(null);
+    // toast.success("Job updated successfully!")
+    // ;
+
+    const jobToUpdate = myJobs.find((job) => job._id === jobId);
+    console.log("jobToUpdate", jobToUpdate);
+
+    const updatedFields = {};
+    debugger
+    Object.keys(jobToUpdate).forEach((key) => {
+      if (jobToUpdate[key] !== originalJob[key]) {
+        updatedFields[key] = jobToUpdate[key];
+      }
+    });
+
+    console.log("Only changed fields:", updatedFields);
+
+    // setEditingMode(null);
   };
 
   return (
@@ -192,7 +173,7 @@ const MyJobs = () => {
 
         {/* Loader */}
         {isLoading ? (
-          <div className="absolute inset-0 bg-gray-200/40 flex justify-center items-center z-10">
+          <div className="absolute inset-0  flex justify-center items-center z-10">
             <ClipLoader color="#1D2084" size={60} />
           </div>
         ) : message ? (
