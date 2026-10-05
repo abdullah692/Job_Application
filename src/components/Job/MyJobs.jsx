@@ -6,70 +6,28 @@ import { RxCross2 } from "react-icons/rx";
 import { Context } from "../../main";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getEmployerJobs } from "../../slices/authSlice";
+import { getEmployerJobs, updateJobByJobId } from "../../slices/authSlice";
 import { ClipLoader, DotLoader } from "react-spinners";
 
 
 
 const MyJobs = () => {
-  const data = [
-    {
-      _id: "1",
-      title: "Frontend React Developer",
-      country: "Pakistan",
-      city: "Karachi",
-      category: "Frontend Web Development",
-      fixedSalary: 120000,
-      salaryFrom: null,
-      salaryTo: null,
-      expired: false,
-      description:
-        "We are looking for a React developer with 2+ years of experience in React, Redux, and Tailwind CSS.",
-      location: "PECHS, Karachi",
-    },
-    {
-      _id: "2",
-      title: "MERN Stack Developer",
-      country: "Pakistan",
-      city: "Lahore",
-      category: "MERN Stack Development",
-      fixedSalary: null,
-      salaryFrom: 100000,
-      salaryTo: 180000,
-      expired: true,
-      description:
-        "Looking for a MERN developer with experience in Node.js, Express.js, MongoDB, and React.",
-      location: "Gulberg, Lahore",
-    },
-  ];
+
   const [myJobs, setMyJobs] = useState([]);
+  const [originalJob, setOriginalJob] = useState(null);
   const [editingMode, setEditingMode] = useState(null);
   const [message, setMessage] = useState(null)
   const [isLoading, setIsLoading] = useState(true);
+  const [updatingJobId, setUpdatingJobId] = useState(null);
 
   const { isAuthorized, user } = useContext(Context);
 
   const dispatch = useDispatch()
 
-  let originalJob='';
+
   const navigateTo = useNavigate();
 
-  //Fetching all jobs
-  // useEffect(() => {
-  //   const fetchJobs = async () => {
-  //     try {
-  //       const { data } = await axios.get(
-  //         "http://localhost:4000/api/v1/job/getmyjobs",
-  //         { withCredentials: true }
-  //       );
-  //       setMyJobs(data.myJobs);
-  //     } catch (error) {
-  //       toast.error(error.response.data.message);
-  //       setMyJobs([]);
-  //     }
-  //   };
-  //   fetchJobs();
-  // }, []);
+  
 
 
   const handleMyJobs = async () => {
@@ -99,14 +57,7 @@ const MyJobs = () => {
 
     }
   }
-  // }
-
-  // console.log({
-  //   isAuthorized,
-  //   user,
-  //   editingMode,
-  // }, "check update");
-
+  
 
   useEffect(() => {
     handleMyJobs()
@@ -119,10 +70,12 @@ const MyJobs = () => {
   //Function For Enabling Editing Mode
   const handleEnableEdit = (jobId) => {
     //Here We Are Giving Id in setEditingMode because We want to enable only that job whose ID has been send.
-    originalJob = myJobs.find((job) => job._id === jobId);
-    console.log("editOriginal",originalJob);
-    
+    const job = myJobs.find((job) => job._id === jobId);
 
+    // Store the original job before editing
+    setOriginalJob({ ...job });
+
+    console.log("editOriginal", job);
     setEditingMode(jobId);
   };
 
@@ -145,26 +98,66 @@ const MyJobs = () => {
     );
   };
 
-  const handleUpdateJob = (jobId) => {
+  const handleUpdateJob = async (jobId) => {
 
 
     // toast.success("Job updated successfully!")
     // ;
+    debugger
 
     const jobToUpdate = myJobs.find((job) => job._id === jobId);
     console.log("jobToUpdate", jobToUpdate);
+    setOriginalJob({ ...jobToUpdate });
+
 
     const updatedFields = {};
-    debugger
     Object.keys(jobToUpdate).forEach((key) => {
       if (jobToUpdate[key] !== originalJob[key]) {
         updatedFields[key] = jobToUpdate[key];
       }
     });
+    setUpdatingJobId(jobId);
 
-    console.log("Only changed fields:", updatedFields);
 
-    // setEditingMode(null);
+    try {
+
+      await dispatch(updateJobByJobId({
+        id: jobId,
+        updateFields: updatedFields
+      }))
+        .unwrap().then((x) => {
+          console.log("xjobxs", x);
+          debugger
+          if (x.message == "Job updated successfully!!") {
+
+            setMyJobs((prevJobs) =>
+              prevJobs.map((job) =>
+                job._id === x.job._id ? x.job : job
+              )
+            );
+            setEditingMode(null);
+            setMessage('')
+            setIsLoading(false)
+
+          }
+        })
+
+    } catch (error) {
+      debugger
+      console.log("errormessage", error);
+
+      // toast.error(error.response.data.message);
+      setMessage(error)
+      setIsLoading(false)
+      setMyJobs([])
+
+    }
+    finally {
+
+      setUpdatingJobId(null);
+
+    }
+
   };
 
   return (
@@ -345,26 +338,24 @@ const MyJobs = () => {
                       className="w-full mt-1 border rounded-lg px-3 py-2 bg-gray-50 resize-none"
                     />
                   </div>
-                  {/* 
-              <div className="flex justify-end gap-4 mt-6">
-                <button className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
-                  onClick={() => handleEnableEdit(job._id)}>
-                  Edit
-                </button>
 
-                <button className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg">
-                  Delete
-                </button>
-              </div> */}
 
                   <div className="flex gap-3">
                     {editingMode === job._id ? (
                       <>
                         <button
                           onClick={() => handleUpdateJob(job._id)}
+                          disabled={updatingJobId === job._id}
                           className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
                         >
-                          Save
+                          {updatingJobId === job._id ? (
+                            <>
+                              <ClipLoader color="#fff" size={18} />
+                              Updating...
+                            </>
+                          ) : (
+                            "Update"
+                          )}
                         </button>
 
                         <button
