@@ -182,11 +182,11 @@ export const updateJobByJobId = createAsyncThunk(
 
 export const deleteJobByJobId = createAsyncThunk(
   'auth/deleteJobByJobId',
-  async (id, { rejectWithValue }) => {
-    try {;
+  async ({id}, { rejectWithValue }) => {
+    try {
 
       const response = await axiosInstance.delete(
-        `/api/updateJob/${id}`);
+        `/api/deleteJob/${id}`);
       return response?.data
     } catch (error) {
       if (error.response && error.response.data) {

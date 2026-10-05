@@ -163,7 +163,7 @@ const MyJobs = () => {
 
 
 
-  const handleDeleteJob = async(jobId) => {
+  const handleDeleteJob = async (jobId) => {
     try {
 
       await dispatch(deleteJobByJobId({
@@ -174,14 +174,13 @@ const MyJobs = () => {
           debugger
           if (x.message == "Job deleted successfully!!") {
 
+
             setMyJobs((prevJobs) =>
-              prevJobs.map((job) =>
-                job._id === x.job._id ? x.job : job
-              )
+              prevJobs.filter((job) => job._id !== jobId)
             );
+
             setEditingMode(null);
             setMessage('')
-            setIsLoading(false)
 
           }
         })
