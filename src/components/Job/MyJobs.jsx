@@ -6,7 +6,7 @@ import { RxCross2 } from "react-icons/rx";
 import { Context } from "../../main";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getEmployerJobs, updateJobByJobId } from "../../slices/authSlice";
+import { getEmployerJobs, updateJobByJobId, deleteJobByJobId } from "../../slices/authSlice";
 import { ClipLoader, DotLoader } from "react-spinners";
 
 
@@ -27,7 +27,7 @@ const MyJobs = () => {
 
   const navigateTo = useNavigate();
 
-  
+
 
 
   const handleMyJobs = async () => {
@@ -57,7 +57,7 @@ const MyJobs = () => {
 
     }
   }
-  
+
 
   useEffect(() => {
     handleMyJobs()
@@ -138,7 +138,7 @@ const MyJobs = () => {
             setEditingMode(null);
             setMessage('')
             setIsLoading(false)
- 
+
           }
         })
 
@@ -158,6 +158,44 @@ const MyJobs = () => {
 
     }
 
+  };
+
+
+
+
+  const handleDeleteJob = async(jobId) => {
+    try {
+
+      await dispatch(deleteJobByJobId({
+        id: jobId,
+      }))
+        .unwrap().then((x) => {
+          console.log("xjobxs", x);
+          debugger
+          if (x.message == "Job deleted successfully!!") {
+
+            setMyJobs((prevJobs) =>
+              prevJobs.map((job) =>
+                job._id === x.job._id ? x.job : job
+              )
+            );
+            setEditingMode(null);
+            setMessage('')
+            setIsLoading(false)
+
+          }
+        })
+
+    } catch (error) {
+      debugger
+      console.log("errormessage", error);
+
+      // toast.error(error.response.data.message);
+      setMessage(error)
+      setIsLoading(false)
+      setMyJobs([])
+
+    }
   };
 
   return (

@@ -178,6 +178,28 @@ export const updateJobByJobId = createAsyncThunk(
 );
 
 
+
+
+export const deleteJobByJobId = createAsyncThunk(
+  'auth/deleteJobByJobId',
+  async (id, { rejectWithValue }) => {
+    try {;
+
+      const response = await axiosInstance.delete(
+        `/api/updateJob/${id}`);
+      return response?.data
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return rejectWithValue(error.response.data.message); // Pass error message
+      }
+      return rejectWithValue(error.message) // Handle other errors (e.g., network)
+    }
+
+  }
+);
+
+
+
 export const postApplication = createAsyncThunk(
   "auth/postApplication",
   async (data, { rejectWithValue }) => {
