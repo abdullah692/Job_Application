@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../../main";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllJobs } from "../../slices/authSlice";
+import { getEmployerJobs } from "../../slices/authSlice";
 import toast from "react-hot-toast";
 import { TbCategory ,TbWorld} from "react-icons/tb";
 import { IoLocationOutline } from "react-icons/io5";
@@ -21,12 +21,12 @@ const Jobs = () => {
   const handleJobs = () => {
 
     try {
-      dispatch(getAllJobs())
+      dispatch(getEmployerJobs())
         .unwrap().then((x) => {
-          if (x.message == "All Jobs fetched successfully!!") {
+          if (x.message == "Jobs fetched successfully!") {
             console.log("xjobxs", x);
 
-            setJobs(x.jobs)
+            setJobs(x.jobPostedBy)
             setIsLoading(false)
           }
         })
