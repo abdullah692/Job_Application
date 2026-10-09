@@ -14,33 +14,33 @@ const MyApplications = () => {
   const { isAuthorized } = useContext(Context);
   const navigateTo = useNavigate();
 
-  useEffect(() => {
-    try {
-      if (user && user.role === "Employer") {
-        axios
-          .get("http://localhost:4000/api/v1/application/employer/getall", {
-            withCredentials: true,
-          })
-          .then((res) => {
-            setApplications(res.data.applications);
-          });
-      } else {
-        axios
-          .get("http://localhost:4000/api/v1/application/jobseeker/getall", {
-            withCredentials: true,
-          })
-          .then((res) => {
-            setApplications(res.data.applications);
-          });
-      }
-    } catch (error) {
-      toast.error(error.response.data.message);
-    }
-  }, [isAuthorized]);
+  // useEffect(() => {
+  //   try {
+  //     if (user && user.role === "Employer") {
+  //       axios
+  //         .get("http://localhost:4000/api/v1/application/employer/getall", {
+  //           withCredentials: true,
+  //         })
+  //         .then((res) => {
+  //           setApplications(res.data.applications);
+  //         });
+  //     } else {
+  //       axios
+  //         .get("http://localhost:4000/api/v1/application/jobseeker/getall", {
+  //           withCredentials: true,
+  //         })
+  //         .then((res) => {
+  //           setApplications(res.data.applications);
+  //         });
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.response.data.message);
+  //   }
+  // }, [isAuthorized]);
 
-  if (!isAuthorized) {
-    navigateTo("/");
-  }
+  // if (!isAuthorized) {
+  //   navigateTo("/");
+  // }
 
   const deleteApplication = (id) => {
     try {

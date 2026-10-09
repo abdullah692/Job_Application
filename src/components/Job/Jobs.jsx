@@ -12,8 +12,9 @@ import { ClipLoader, DotLoader } from "react-spinners";
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+    const { isAuthorized, user } = useSelector((state) => state.auth)
+  
 
-  const { isAuthorized } = useContext(Context);
   const navigateTo = useNavigate();
   const dispatch = useDispatch();
 
@@ -58,7 +59,7 @@ const Jobs = () => {
         {/* Heading */}
         {!isLoading && jobs.length > 0 && (
           <h1 className="text-2xl md:text-3xl font-semibold text-center text-gray-800 mb-8">
-            Available Jobs
+            {user?.role == "Employer" ? "Your Posted Jobs" : "Available Jobs"}
           </h1>
         )}
 
