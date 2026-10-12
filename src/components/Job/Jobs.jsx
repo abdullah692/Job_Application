@@ -1,19 +1,27 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
-import axios from "axios";
+
+import ConfirmDialog from "../DialogBox/DialogBox";
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../../main";
 import { useSelector, useDispatch } from "react-redux";
-import { getEmployerJobs } from "../../slices/authSlice";
+import { getEmployerJobs, deleteJobByJobId } from "../../slices/authSlice";
 import toast from "react-hot-toast";
-import { TbCategory ,TbWorld} from "react-icons/tb";
+import { TbCategory, TbWorld } from "react-icons/tb";
+import { MdDelete } from "react-icons/md";
+
 import { IoLocationOutline } from "react-icons/io5";
 
 import { ClipLoader, DotLoader } from "react-spinners";
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-    const { isAuthorized, user } = useSelector((state) => state.auth)
-  
+  const [message, setMessage] = useState(null)
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [selectedJobId, setSelectedJobId] = useState(null);
+  const [deletingJobId, setDeletingJobId] = useState(null);
+
+  const { isAuthorized, user } = useSelector((state) => state.auth)
+
 
   const navigateTo = useNavigate();
   const dispatch = useDispatch();
@@ -34,17 +42,85 @@ const Jobs = () => {
         .catch((error) => {
           if (!hasErrorToastShown) {
             toast.error(error);
+            setMessage(error)
+            setIsLoading(false)
+
+
             hasErrorToastShown = true; // Prevent further error toasts
           }
         })
 
     } catch (error) {
       console.log("error", error);
-      toast.error(error)
+      // toast.error(error)
+      setMessage(error)
       // setHasFetched(true);
       setIsLoading(false)
     }
   }
+
+
+  // const handleDeleteJob = async (jobId) => {
+  //   try {
+  //     debugger
+  //     await dispatch(deleteJobByJobId({
+  //       id: jobId,
+  //     }))
+  //       .unwrap().then((x) => {
+  //         console.log("xjobxs", x);
+  //         debugger
+  //         if (x.message == "Job deleted successfully!!") {
+
+
+  //           setJobs((prevJobs) =>
+  //             prevJobs.filter((job) => job._id !== jobId)
+  //           );
+
+
+
+  //         }
+  //       })
+
+  //   } catch (error) {
+  //     debugger
+  //     console.log("errormessage", error);
+
+  //     // toast.error(error.response.data.message);
+  //     setMessage(error)
+  //     setIsLoading(false)
+  //     // setJobs([])
+
+  //   }
+  // };
+
+
+  const handleDeleteJob = async () => {
+  if (!selectedJobId) return;
+
+  try {
+    setDeletingJobId(selectedJobId);
+
+    const response = await dispatch(
+      deleteJobByJobId({ id: selectedJobId })
+    ).unwrap();
+
+
+
+    if (response.message === "Job deleted successfully!!") {
+      setJobs((prevJobs) =>
+        prevJobs.filter((job) => job._id !== selectedJobId)
+      );
+
+      setShowDeleteDialog(false);
+      setSelectedJobId(null);
+    }
+  } catch (error) {
+    console.error("Failed to delete job:", error);
+  } finally {
+    setDeletingJobId(null);
+  }
+};
+
 
 
   useEffect(() => {
@@ -53,80 +129,153 @@ const Jobs = () => {
 
 
   return (
-    <section className="jobs page py-8 bg-gray-50 min-h-screen">
-      <div className="max-w-6xl mx-auto px-4">
+    <>
+      <section className="jobs page py-8 bg-gray-50 min-h-screen">
+        <div className="max-w-6xl mx-auto px-4">
 
-        {/* Heading */}
-        {!isLoading && jobs.length > 0 && (
-          <h1 className="text-2xl md:text-3xl font-semibold text-center text-gray-800 mb-8">
-            {user?.role == "Employer" ? "Your Posted Jobs" : "Available Jobs"}
-          </h1>
-        )}
+          {/* Heading */}
+          {!isLoading && jobs.length > 0 && (
+            <h1 className="text-2xl md:text-3xl font-semibold text-center text-gray-800 mb-8">
+              {user?.role === "Employer"
+                ? "Your Posted Jobs"
+                : "Available Jobs"}
+            </h1>
+          )}
 
-        {/* Loader */}
-        {isLoading ? (
-          <div className="absolute inset-0 bg-gray-200/40 flex justify-center items-center z-10">
-            <ClipLoader color="#1D2084" size={60} />
-          </div>
-        ) : jobs.length > 0 ? (
+          {/* Loader */}
+          {isLoading ? (
+            <div className="absolute inset-0 flex justify-center items-center z-10">
+              <ClipLoader color="#1D2084" size={60} />
+            </div>
+          ) : jobs.length > 0 ? (
 
-          /* Jobs Grid */
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {jobs.map((job) => (
-              <div
-                key={job._id}
-                className="bg-white border border-gray-300 rounded-lg p-5 hover:shadow-md transition flex flex-col justify-between cursor-pointer"
-              >
-                {/* Job Info */}
-                <div>
-                  <h2 className="text-lg font-semibold text-gray-800 mb-1">
-                    {job.title}
-                  </h2>
-                  <div className="flex  gap-2">
-                    <TbCategory color="gray"/>
-                    <p className="text-sm text-gray-600">{job.category}</p>
-                  </div>
-                  <div className="flex  gap-2">
-                    <TbWorld color="gray"/>
-                    <p className="text-sm text-gray-500">{job.city} - {job.country}</p>
-                  </div>
-                  <div className="flex  gap-2">
-                    <IoLocationOutline color="gray"/>
-                  <p className="text-sm text-gray-500">{job.location}</p>
+            /* Jobs Grid */
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {jobs.map((job) => (
+                <div
+                  key={job._id}
+                  className="bg-white border border-gray-300 rounded-lg p-5 hover:shadow-md transition flex flex-col justify-between cursor-pointer"
+                >
+                  {/* Job Info */}
+                  <div>
+                    {/* Job Title and Delete Icon */}
+                    <div className="flex justify-between items-start gap-3 mb-3">
+                      <h2 className="text-lg font-semibold text-gray-800">
+                        {job.title}
+                      </h2>
+
+                      {user?.role === "Employer" && (
+                        <button
+                          onClick={() => {
+                            setSelectedJobId(job._id);
+                            setShowDeleteDialog(true);
+                          }}
+                          className="text-gray-500 transition hover:text-red-600"
+                          title="Delete Job"
+                        >
+                          <MdDelete size={22} />
+                        </button>
+                      )}
                     </div>
 
+                    {/* Category */}
+                    <div className="flex gap-2">
+                      <TbCategory color="gray" />
+                      <p className="text-sm text-gray-600">
+                        {job.category}
+                      </p>
+                    </div>
 
+                    {/* City and Country */}
+                    <div className="flex gap-2">
+                      <TbWorld color="gray" />
+                      <p className="text-sm text-gray-500">
+                        {job.city} - {job.country}
+                      </p>
+                    </div>
+
+                    {/* Location */}
+                    <div className="flex gap-2">
+                      <IoLocationOutline color="gray" />
+                      <p className="text-sm text-gray-500">
+                        {job.location}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* View Details Button */}
+                  <Link
+                    to={`/job/${job._id}`}
+                    className="mt-4 inline-block text-center bg-blue-900 text-white py-2 rounded-md text-sm hover:bg-blue-500 transition"
+                  >
+                    View Details
+                  </Link>
                 </div>
+              ))}
+            </div>
 
-                {/* Button */}
-                <Link
-                  to={`/job/${job._id}`}
-                  className="mt-4 inline-block text-center bg-blue-900 text-white py-2 rounded-md text-sm hover:bg-blue-500 transition"
-                >
-                  View Details
-                </Link>
-              </div>
-            ))}
-          </div>
+          ) : (
+            /* Empty State */
+            < div className="text-center mt-20">
+              {user?.role === "Employer" ? (
+                <>
+                  <p className="text-xl text-gray-700 mb-2">
+                    You haven't posted any jobs yet
+                  </p>
 
-        ) : (
+                  <p className="text-gray-500 text-sm">
+                    Start hiring by posting your first job today!
+                  </p>
 
-          /* Empty State */
-          <div className="text-center mt-20">
-            <p className="text-xl text-gray-700 mb-2">No jobs available</p>
-            <p className="text-gray-500 text-sm">Please check back later</p>
-            <Link to="/">
-              <button
-                className="mt-4 p-4 inline-block text-center bg-blue-900 text-white py-2 rounded-md text-sm hover:bg-blue-500 transition"
-              >
-                Back to Homepage
-              </button>
-            </Link>
-          </div>
+                  <Link
+                    to="/job/post"
+                    className="mt-4 inline-block text-center bg-blue-900 text-white px-5 py-2 rounded-md text-sm hover:bg-blue-500 transition"
+                  >
+                    Post a Job
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <p className="text-xl text-gray-700 mb-2">
+                    No jobs available
+                  </p>
 
-        )}
-      </div>
-    </section>
+                  <p className="text-gray-500 text-sm">
+                    Please check back later
+                  </p>
+
+                  <Link
+                    to="/"
+                    className="mt-4 inline-block text-center bg-blue-900 text-white px-5 py-2 rounded-md text-sm hover:bg-blue-500 transition"
+                  >
+                    Back to Homepage
+                  </Link>
+                </>
+              )}
+            </div>
+
+          )}
+        </div>
+      </section >
+
+
+      <ConfirmDialog
+        isOpen={showDeleteDialog}
+        title="Delete Job?"
+        message="Are you sure you want to delete this job?"
+        confirmText="Delete Job"
+        cancelText="Cancel"
+        onConfirm={handleDeleteJob}
+        onClose={() => {
+          setShowDeleteDialog(false);
+          setSelectedJobId(null);
+        }}
+        loading={deletingJobId !== null}
+        variant="danger"
+      />
+
+    </>
+
   );
 };
 
