@@ -158,6 +158,24 @@ export const getJobById = createAsyncThunk(
 
 
 
+export const postJob = createAsyncThunk(
+  'auth/postJob',
+  async (jobData, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post("/api/postJob", jobData);
+      return response?.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return rejectWithValue(error.response.data.message);
+      }
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+   
+
+
 
 export const updateJobByJobId = createAsyncThunk(
   'auth/updateJobByJobId',
