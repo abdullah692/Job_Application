@@ -4,6 +4,8 @@ import { getJobById } from "../../slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../../main";
 import toast from "react-hot-toast";
+import { GoOrganization } from "react-icons/go";
+
 import { MdWork, MdLocationOn, MdAttachMoney, MdDateRange } from "react-icons/md";
 import { ClipLoader, DotLoader } from "react-spinners";
 
@@ -84,7 +86,14 @@ const JobDetails = () => {
                   {job.title}
                 </h2>
 
+                
+
                 <div className="flex flex-wrap items-center gap-4 mt-2 text-gray-600 text-sm">
+                 <div className="flex items-center gap-1">
+                    <GoOrganization />
+                    <span> {job.companyName ? job.companyName : "Teresol Technologies"}</span>
+                  </div>
+                 
                   <div className="flex items-center gap-1">
                     <MdWork />
                     <span>{job.category}</span>

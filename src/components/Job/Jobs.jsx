@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getEmployerJobs, deleteJobByJobId } from "../../slices/authSlice";
 import toast from "react-hot-toast";
 import { TbCategory, TbWorld } from "react-icons/tb";
+import { GoOrganization } from "react-icons/go";
 import { MdDelete } from "react-icons/md";
 
 import { IoLocationOutline } from "react-icons/io5";
@@ -95,31 +96,31 @@ const Jobs = () => {
 
 
   const handleDeleteJob = async () => {
-  if (!selectedJobId) return;
+    if (!selectedJobId) return;
 
-  try {
-    setDeletingJobId(selectedJobId);
+    try {
+      setDeletingJobId(selectedJobId);
 
-    const response = await dispatch(
-      deleteJobByJobId({ id: selectedJobId })
-    ).unwrap();
+      const response = await dispatch(
+        deleteJobByJobId({ id: selectedJobId })
+      ).unwrap();
 
 
 
-    if (response.message === "Job deleted successfully!!") {
-      setJobs((prevJobs) =>
-        prevJobs.filter((job) => job._id !== selectedJobId)
-      );
+      if (response.message === "Job deleted successfully!!") {
+        setJobs((prevJobs) =>
+          prevJobs.filter((job) => job._id !== selectedJobId)
+        );
 
-      setShowDeleteDialog(false);
-      setSelectedJobId(null);
+        setShowDeleteDialog(false);
+        setSelectedJobId(null);
+      }
+    } catch (error) {
+      console.error("Failed to delete job:", error);
+    } finally {
+      setDeletingJobId(null);
     }
-  } catch (error) {
-    console.error("Failed to delete job:", error);
-  } finally {
-    setDeletingJobId(null);
-  }
-};
+  };
 
 
 
@@ -148,13 +149,12 @@ const Jobs = () => {
               <ClipLoader color="#1D2084" size={60} />
             </div>
           ) : jobs.length > 0 ? (
-
-            /* Jobs Grid */
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            // {/* Jobs Grid */ }
+            < div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {jobs.map((job) => (
                 <div
                   key={job._id}
-                  className="bg-white border border-gray-300 rounded-lg p-5 hover:shadow-md transition flex flex-col justify-between cursor-pointer"
+                  className="bg-white border border-gray-200 rounded-lg p-5 hover:shadow-md transition flex flex-col justify-between cursor-pointer"
                 >
                   {/* Job Info */}
                   <div>
@@ -178,35 +178,45 @@ const Jobs = () => {
                       )}
                     </div>
 
+                    {/* Company Name */}
+                    <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-100">
+                      <div className="flex items-center justify-center w-9 h-9 rounded-full bg-gray-100">
+                        <GoOrganization size={18} className="text-[#1D2084]" />
+                      </div>
+
+                      <div className="min-w-0">
+                        <p className="text-xs text-gray-500">Company</p>
+                        <p className="text-sm font-bold text-gray-800 truncate">
+                          {job.companyName ? job.companyName : "Teresol Technologies"}
+                        </p>
+                      </div>
+                    </div>
+
                     {/* Category */}
-                    <div className="flex gap-2">
-                      <TbCategory color="gray" />
-                      <p className="text-sm text-gray-600">
-                        {job.category}
-                      </p>
+                    <div className="flex items-center gap-2 mb-3">
+                      <TbCategory className="shrink-0 text-gray-500" />
+                      <p className="text-sm text-gray-600">{job.category}</p>
                     </div>
 
                     {/* City and Country */}
-                    <div className="flex gap-2">
-                      <TbWorld color="gray" />
+                    <div className="flex items-center gap-2 mb-3">
+                      <TbWorld className="shrink-0 text-gray-500" />
                       <p className="text-sm text-gray-500">
                         {job.city} - {job.country}
                       </p>
                     </div>
 
                     {/* Location */}
-                    <div className="flex gap-2">
-                      <IoLocationOutline color="gray" />
-                      <p className="text-sm text-gray-500">
-                        {job.location}
-                      </p>
+                    <div className="flex items-center gap-2">
+                      <IoLocationOutline className="shrink-0 text-gray-500" />
+                      <p className="text-sm text-gray-500">{job.location}</p>
                     </div>
                   </div>
 
                   {/* View Details Button */}
                   <Link
                     to={`/job/${job._id}`}
-                    className="mt-4 inline-block text-center bg-blue-900 text-white py-2 rounded-md text-sm hover:bg-blue-500 transition"
+                    className="mt-5 inline-block text-center bg-[#1D2084] text-white py-2 rounded-md text-sm hover:bg-blue-800 transition"
                   >
                     View Details
                   </Link>

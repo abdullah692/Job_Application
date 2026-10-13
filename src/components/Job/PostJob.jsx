@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import {postJob} from "../../slices/authSlice"
+import { postJob } from "../../slices/authSlice"
 import { useSelector, useDispatch } from "react-redux";
 
 import { Context } from "../../main";
@@ -11,6 +11,7 @@ const PostJob = () => {
     title: "",
     description: "",
     category: "",
+    companyName: "",
     country: "",
     city: "",
     location: "",
@@ -22,8 +23,8 @@ const PostJob = () => {
 
   const { isAuthorized, user } = useContext(Context);
 
-    const dispatch = useDispatch();
-  
+  const dispatch = useDispatch();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -41,6 +42,7 @@ const PostJob = () => {
         title,
         description,
         category,
+        companyName,
         country,
         city,
         location,
@@ -54,6 +56,7 @@ const PostJob = () => {
         title,
         description,
         category,
+        companyName,
         country,
         city,
         location,
@@ -69,12 +72,12 @@ const PostJob = () => {
         return;
       }
 
-      console.log(jobPayload,"jobPayload");
-      
+      console.log(jobPayload, "jobPayload");
+
 
       const response = await dispatch(postJob(jobPayload)).unwrap();
-      console.log(response,"response");
-      
+      console.log(response, "response");
+
 
       toast.success(response.message);
 
@@ -82,6 +85,7 @@ const PostJob = () => {
         title: "",
         description: "",
         category: "",
+        companyName: "",
         country: "",
         city: "",
         location: "",
@@ -97,6 +101,22 @@ const PostJob = () => {
           : error?.message || "Failed to post job."
       );
     }
+  };
+
+  const handleClear = () => {
+    setJobData({
+    title: "",
+    category: "",
+    country: "",
+    companyName: "",
+    city: "",
+    location: "",
+    salaryType: "default",
+    fixedSalary: "",
+    salaryFrom: "",
+    salaryTo: "",
+    description: "",
+  });
   };
 
 
@@ -125,6 +145,21 @@ const PostJob = () => {
             <h3 className="mb-3 border-b border-gray-100 pb-2 text-sm font-semibold text-[#1D2084]">
               Basic Information
             </h3>
+
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700 ">
+                Company Name
+              </label>
+              <input
+                type="text"
+                name="companyName"
+                value={jobData.companyName}
+                onChange={handleChange}
+                placeholder="Enter company name"
+                required
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-[#1D2084] focus:ring-1 focus:ring-[#1D2084]/20 mb-3"
+              />
+            </div>
 
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               <div>
@@ -234,77 +269,77 @@ const PostJob = () => {
                 <label className="mb-1 block text-sm font-medium text-gray-700">
                   Salary Type
                 </label>
-                
-                
 
-                  <select
-                    value={jobData.salaryType}
-                    name="salaryType"
+
+
+                <select
+                  value={jobData.salaryType}
+                  name="salaryType"
+                  onChange={handleChange}
+                  required
+                  className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:outline-none focus:ring-1 focus:ring-[#1D2084]/20"
+                >
+                  <option value="default">Select Salary Type</option>
+                  <option value="Fixed Salary">Fixed Salary</option>
+                  <option value="Ranged Salary">Ranged Salary</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  {jobData.salaryType === "Ranged Salary"
+                    ? "Salary Range"
+                    : "Salary Amount"}
+                </label>
+
+                {jobData.salaryType === "default" ? (
+                  <input
+                    type="text"
+                    value=""
+                    placeholder="Select salary type first"
+                    disabled
+                    className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-400"
+                  />
+                ) : jobData.salaryType === "Fixed Salary" ? (
+                  <input
+                    type="number"
+                    name="fixedSalary"
+                    value={jobData.fixedSalary}
                     onChange={handleChange}
+                    placeholder="Fixed salary"
                     required
-                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:outline-none focus:ring-1 focus:ring-[#1D2084]/20"
-                  >
-                    <option value="default">Select Salary Type</option>
-                    <option value="Fixed Salary">Fixed Salary</option>
-                    <option value="Ranged Salary">Ranged Salary</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-700">
-                    {jobData.salaryType === "Ranged Salary"
-                      ? "Salary Range"
-                      : "Salary Amount"}
-                  </label>
-
-                  {jobData.salaryType === "default" ? (
-                    <input
-                      type="text"
-                      value=""
-                      placeholder="Select salary type first"
-                      disabled
-                      className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-400"
-                    />
-                  ) : jobData.salaryType === "Fixed Salary" ? (
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:outline-none focus:ring-1 focus:ring-[#1D2084]/20"
+                  />
+                ) : (
+                  <div className="flex gap-2">
                     <input
                       type="number"
-                      name="fixedSalary"
-                      value={jobData.fixedSalary}
-                      onChange={handleChange}
-                      placeholder="Fixed salary"
-                      required
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:outline-none focus:ring-1 focus:ring-[#1D2084]/20"
-                    />
-                  ) : (
-                    <div className="flex gap-2">
-                      <input
-                        type="number"
-                        name="salaryFrom"
-                        
-                        value={jobData.salaryFrom}
-                        onChange={handleChange}
-                        placeholder="From"
-                        required
-                        className="w-full min-w-0 rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:outline-none focus:ring-1 focus:ring-[#1D2084]/20"
-                      />
+                      name="salaryFrom"
 
-                      <input
-                        type="number"
-                        name="salaryTo"
-                        value={jobData.salaryTo}
-                        onChange={handleChange}
-                        placeholder="To"
-                        required
-                        className="w-full min-w-0 rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:outline-none focus:ring-1 focus:ring-[#1D2084]/20"
-                      />
-                    </div>
-                  )}
-                  
-                </div>
-                
+                      value={jobData.salaryFrom}
+                      onChange={handleChange}
+                      placeholder="From"
+                      required
+                      className="w-full min-w-0 rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:outline-none focus:ring-1 focus:ring-[#1D2084]/20"
+                    />
+
+                    <input
+                      type="number"
+                      name="salaryTo"
+                      value={jobData.salaryTo}
+                      onChange={handleChange}
+                      placeholder="To"
+                      required
+                      className="w-full min-w-0 rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:outline-none focus:ring-1 focus:ring-[#1D2084]/20"
+                    />
+                  </div>
+                )}
+
               </div>
+
             </div>
-          
+          </div>
+
 
           {/* Description */}
           <div>
@@ -314,7 +349,7 @@ const PostJob = () => {
 
             <textarea
               rows={4}
-              name ="description" 
+              name="description"
               value={jobData.description}
               onChange={handleChange}
               placeholder="Describe the job responsibilities, skills, and requirements..."
@@ -327,18 +362,7 @@ const PostJob = () => {
           <div className="flex justify-end gap-3 border-t border-gray-100 pt-4">
             <button
               type="button"
-              onClick={() => {
-                setTitle("");
-                setCategory("");
-                setCountry("");
-                setCity("");
-                setLocation("");
-                setSalaryType("default");
-                setFixedSalary("");
-                setSalaryFrom("");
-                setSalaryTo("");
-                setDescription("");
-              }}
+              onClick={handleClear}
               className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-50"
             >
               Clear

@@ -162,6 +162,7 @@ export const postJob = createAsyncThunk(
   'auth/postJob',
   async (jobData, { rejectWithValue }) => {
     try {
+      debugger
       const response = await axiosInstance.post("/api/postJob", jobData);
       return response?.data;
     } catch (error) {
