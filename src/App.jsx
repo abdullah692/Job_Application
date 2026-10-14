@@ -70,10 +70,29 @@ const App = () => {
         />
 
         <Route
-          path="/job/getall"
+          path="/employer/jobs"
           element={
             <ProtectedRoute>
               <Jobs />
+            </ProtectedRoute>
+          }
+        />
+
+
+         <Route
+          path="/job/post"
+          element={
+            <ProtectedRoute>
+              <PostJob />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/employer/jobs/:id"
+          element={
+            <ProtectedRoute>
+              <MyJobs />
             </ProtectedRoute>
           }
         />
@@ -105,23 +124,7 @@ const App = () => {
           }
         />
 
-        <Route
-          path="/job/post"
-          element={
-            <ProtectedRoute>
-              <PostJob />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/job/me"
-          element={
-            <ProtectedRoute>
-              <MyJobs />
-            </ProtectedRoute>
-          }
-        />
+       
 
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -215,7 +215,7 @@ const Jobs = () => {
 
                   {/* View Details Button */}
                   <Link
-                    to={`/job/${job._id}`}
+                    to={`/employer/jobs/${job._id}`}
                     className="mt-5 inline-block text-center bg-[#1D2084] text-white py-2 rounded-md text-sm hover:bg-blue-800 transition"
                   >
                     View Details

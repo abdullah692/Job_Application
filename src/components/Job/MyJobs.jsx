@@ -3,17 +3,19 @@ import React, { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaCheck } from "react-icons/fa6";
 import { RxCross2 } from "react-icons/rx";
+import { Link, useParams } from "react-router-dom";
+
 import { Context } from "../../main";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getEmployerJobs, updateJobByJobId, deleteJobByJobId } from "../../slices/authSlice";
-import { ClipLoader, DotLoader } from "react-spinners";
+import { getJobById, updateJobByJobId, deleteJobByJobId } from "../../slices/authSlice";
+import { ClipLoader } from "react-spinners";
 
 
 
 const MyJobs = () => {
 
-  const [myJobs, setMyJobs] = useState([]);
+  const [myJobs, setMyJobs] = useState(null);
   const [originalJob, setOriginalJob] = useState(null);
   const [editingMode, setEditingMode] = useState(null);
   const [message, setMessage] = useState(null)
@@ -24,6 +26,9 @@ const MyJobs = () => {
 
   const dispatch = useDispatch()
 
+  const { id } = useParams();
+
+
 
   const navigateTo = useNavigate();
 
@@ -33,16 +38,12 @@ const MyJobs = () => {
   const handleMyJobs = async () => {
     try {
 
-      await dispatch(getEmployerJobs())
+      await dispatch(getJobById(id))
         .unwrap().then((x) => {
-          console.log("xjobxs", x);
-          if (x.message == "Jobs fetched successfully!") {
-
-            setMyJobs(x.jobPostedBy)
+          if (x.success == true) {
+            setMyJobs(x.job)
+            setIsLoading(false)
             setMessage('')
-            setIsLoading(false)
-
-            setIsLoading(false)
           }
         })
 
@@ -53,7 +54,7 @@ const MyJobs = () => {
       // toast.error(error.response.data.message);
       setMessage(error)
       setIsLoading(false)
-      setMyJobs([])
+      setMyJobs(null)
 
     }
   }
@@ -67,18 +68,15 @@ const MyJobs = () => {
   //   navigateTo("/");
   // }
 
-  //Function For Enabling Editing Mode
-  const handleEnableEdit = (jobId) => {
-    //Here We Are Giving Id in setEditingMode because We want to enable only that job whose ID has been send.
-    const job = myJobs.find((job) => job._id === jobId);
+const handleEnableEdit = () => {
+  // Store the original job before editing
+  setOriginalJob({ ...myJobs });
 
-    // Store the original job before editing
-    setOriginalJob({ ...job });
+  console.log("editOriginal", myJobs);
 
-    console.log("editOriginal", job);
-    setEditingMode(jobId);
-  };
-
+  // Enable editing for this job
+  setEditingMode(myJobs._id);
+};
   //Function For Disabling Editing Mode
   const handleDisableEdit = () => {
     setEditingMode(null);
@@ -88,15 +86,22 @@ const MyJobs = () => {
 
   console.log("message", message);
 
-  const handleInputChange = (jobId, field, value) => {
-    // Update the job object in the jobs state with the new value
-    debugger
-    setMyJobs((prevJobs) =>
-      prevJobs.map((job) =>
-        job._id === jobId ? { ...job, [field]: value } : job
-      )
-    );
-  };
+  // const handleInputChange = (jobId, field, value) => {
+  //   // Update the job object in the jobs state with the new value
+  //   debugger
+  //   setMyJobs((prevJobs) =>
+  //     prevJobs.map((job) =>
+  //       job._id === jobId ? { ...job, [field]: value } : job
+  //     )
+  //   );
+  // };
+
+  const handleInputChange = (id, field, value) => {
+  setMyJobs((prev) => ({
+    ...prev,
+    [field]: value,
+  }));
+};
 
   const handleUpdateJob = async (jobId) => {
 
@@ -163,11 +168,11 @@ const MyJobs = () => {
 
 
 
-  const handleDeleteJob = async (jobId) => {
+  const handleDeleteJob = async () => {
     try {
 
       await dispatch(deleteJobByJobId({
-        id: jobId,
+        id: id,
       }))
         .unwrap().then((x) => {
           console.log("xjobxs", x);
@@ -224,130 +229,158 @@ const MyJobs = () => {
         ) : (
           <>
             <div className="grid gap-6">
-              {myJobs.map((job) => (
-                <div
-                  key={job._id}
-                  className="bg-white rounded-xl shadow-md p-6 border border-gray-200"
-                >
+              {myJobs && (
+                <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200">
                   <div className="grid md:grid-cols-2 gap-6">
+                    {/* Title */}
                     <div>
                       <label className="text-sm font-semibold text-gray-600">
                         Title
                       </label>
                       <input
-                        value={job.title}
-                        disabled={editingMode != job._id}
+                        value={myJobs.title || ""}
+                        disabled={editingMode !== myJobs._id}
                         onChange={(e) =>
-                          handleInputChange(job._id, "title", e.target.value)
+                          handleInputChange(myJobs._id, "title", e.target.value)
                         }
                         className="w-full mt-1 border rounded-lg px-3 py-2 bg-gray-50"
                       />
                     </div>
 
+                    {/* Category */}
                     <div>
                       <label className="text-sm font-semibold text-gray-600">
                         Category
                       </label>
                       <input
-                        value={job.category}
-                        disabled={editingMode != job._id}
-                        onChange={(e) => handleInputChange(job._id, "category", e.target.value)}
+                        value={myJobs.category || ""}
+                        disabled={editingMode !== myJobs._id}
+                        onChange={(e) =>
+                          handleInputChange(myJobs._id, "category", e.target.value)
+                        }
                         className="w-full mt-1 border rounded-lg px-3 py-2 bg-gray-50"
                       />
                     </div>
 
+                    {/* Country */}
                     <div>
                       <label className="text-sm font-semibold text-gray-600">
                         Country
                       </label>
                       <input
-                        value={job.country}
-                        disabled={editingMode != job._id}
-                        onChange={(e) => handleInputChange(job._id, "country", e.target.value)}
+                        value={myJobs.country || ""}
+                        disabled={editingMode !== myJobs._id}
+                        onChange={(e) =>
+                          handleInputChange(myJobs._id, "country", e.target.value)
+                        }
                         className="w-full mt-1 border rounded-lg px-3 py-2 bg-gray-50"
                       />
                     </div>
 
+                    {/* City */}
                     <div>
                       <label className="text-sm font-semibold text-gray-600">
                         City
                       </label>
                       <input
-                        value={job.city}
-                        disabled={editingMode != job._id}
-                        onChange={(e) => handleInputChange(job._id, "city", e.target.value)}
+                        value={myJobs.city || ""}
+                        disabled={editingMode !== myJobs._id}
+                        onChange={(e) =>
+                          handleInputChange(myJobs._id, "city", e.target.value)
+                        }
                         className="w-full mt-1 border rounded-lg px-3 py-2 bg-gray-50"
                       />
                     </div>
 
+                    {/* Salary */}
                     <div>
                       <label className="text-sm font-semibold text-gray-600">
                         Salary
                       </label>
 
-                      {job.fixedSalary ? (
+                      {myJobs.fixedSalary ? (
                         <input
-                          value={`${job.fixedSalary}`}
-                          disabled={editingMode != job._id}
-                          onChange={(e) => handleInputChange(job._id, "fixedSalary", e.target.value)}
+                          value={myJobs.fixedSalary}
+                          disabled={editingMode !== myJobs._id}
+                          onChange={(e) =>
+                            handleInputChange(
+                              myJobs._id,
+                              "fixedSalary",
+                              e.target.value
+                            )
+                          }
                           className="w-full mt-1 border rounded-lg px-3 py-2 bg-gray-50"
                         />
                       ) : (
                         <div className="flex gap-3 mt-1">
                           <input
-                            value={job.salaryFrom}
-                            disabled={editingMode != job._id}
-                            onChange={(e) => handleInputChange(job._id, "salaryFrom", e.target.value)}
+                            value={myJobs.salaryFrom ?? ""}
+                            disabled={editingMode !== myJobs._id}
+                            onChange={(e) =>
+                              handleInputChange(
+                                myJobs._id,
+                                "salaryFrom",
+                                e.target.value
+                              )
+                            }
+                            placeholder="Salary From"
                             className="w-full border rounded-lg px-3 py-2 bg-gray-50"
                           />
+
                           <input
-                            value={job.salaryTo}
-                            disabled={editingMode != job._id}
-                            onChange={(e) => handleInputChange(job._id, "salaryTo", e.target.value)}
+                            value={myJobs.salaryTo ?? ""}
+                            disabled={editingMode !== myJobs._id}
+                            onChange={(e) =>
+                              handleInputChange(
+                                myJobs._id,
+                                "salaryTo",
+                                e.target.value
+                              )
+                            }
+                            placeholder="Salary To"
                             className="w-full border rounded-lg px-3 py-2 bg-gray-50"
                           />
                         </div>
                       )}
                     </div>
 
+                    {/* Status */}
                     <div>
                       <label className="text-sm font-semibold text-gray-600">
                         Status
                       </label>
 
-                      <div className="mt-2">
-
-                        {editingMode === job._id ? (
-                          <select
-                            value={job.expired.toString()}
-                            onChange={(e) =>
-                              handleInputChange(
-                                job._id,
-                                "expired",
-                                e.target.value === "true"
-                              )
-                            }
-                            className="w-full mt-1 border rounded-lg px-3 py-2 bg-gray-50"
-                          >
-                            <option value="false">Active</option>
-                            <option value="true">Expired</option>
-                          </select>
-                        ) : (
-                          <div className="mt-2">
-                            <span
-                              className={`px-3 py-1 rounded-full text-sm font-medium ${job.expired
+                      {editingMode === myJobs._id ? (
+                        <select
+                          value={String(myJobs.expired)}
+                          onChange={(e) =>
+                            handleInputChange(
+                              myJobs._id,
+                              "expired",
+                              e.target.value === "true"
+                            )
+                          }
+                          className="w-full mt-1 border rounded-lg px-3 py-2 bg-gray-50"
+                        >
+                          <option value="false">Active</option>
+                          <option value="true">Expired</option>
+                        </select>
+                      ) : (
+                        <div className="mt-3">
+                          <span
+                            className={`px-3 py-1 rounded-full text-sm font-medium ${myJobs.expired
                                 ? "bg-red-100 text-red-600"
                                 : "bg-green-100 text-green-600"
-                                }`}
-                            >
-                              {job.expired ? "Expired" : "Active"}
-                            </span>
-                          </div>
-                        )}
-                      </div>
+                              }`}
+                          >
+                            {myJobs.expired ? "Expired" : "Active"}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </div>
 
+                  {/* Description */}
                   <div className="mt-6">
                     <label className="text-sm font-semibold text-gray-600">
                       Description
@@ -355,13 +388,20 @@ const MyJobs = () => {
 
                     <textarea
                       rows={4}
-                      value={job.description}
-                      disabled={editingMode != job._id}
-                      onChange={(e) => handleInputChange(job._id, "description", e.target.value)}
+                      value={myJobs.description || ""}
+                      disabled={editingMode !== myJobs._id}
+                      onChange={(e) =>
+                        handleInputChange(
+                          myJobs._id,
+                          "description",
+                          e.target.value
+                        )
+                      }
                       className="w-full mt-1 border rounded-lg px-3 py-2 bg-gray-50 resize-none"
                     />
                   </div>
 
+                  {/* Location */}
                   <div className="mt-6">
                     <label className="text-sm font-semibold text-gray-600">
                       Location
@@ -369,23 +409,30 @@ const MyJobs = () => {
 
                     <textarea
                       rows={2}
-                      value={job.location}
-                      disabled={editingMode != job._id}
-                      onChange={(e) => handleInputChange(job._id, "location", e.target.value)}
+                      value={myJobs.location || ""}
+                      disabled={editingMode !== myJobs._id}
+                      onChange={(e) =>
+                        handleInputChange(
+                          myJobs._id,
+                          "location",
+                          e.target.value
+                        )
+                      }
                       className="w-full mt-1 border rounded-lg px-3 py-2 bg-gray-50 resize-none"
                     />
                   </div>
 
-
-                  <div className="flex gap-3">
-                    {editingMode === job._id ? (
+                  {/* Actions */}
+                  <div className="flex gap-3 mt-6">
+                    {editingMode === myJobs._id ? (
                       <>
                         <button
-                          onClick={() => handleUpdateJob(job._id)}
-                          disabled={updatingJobId === job._id}
-                          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+                          type="button"
+                          onClick={() => handleUpdateJob(myJobs._id)}
+                          disabled={updatingJobId === myJobs._id}
+                          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-60 flex items-center gap-2"
                         >
-                          {updatingJobId === job._id ? (
+                          {updatingJobId === myJobs._id ? (
                             <>
                               <ClipLoader color="#fff" size={18} />
                               Updating...
@@ -396,6 +443,7 @@ const MyJobs = () => {
                         </button>
 
                         <button
+                          type="button"
                           onClick={handleDisableEdit}
                           className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
                         >
@@ -405,14 +453,16 @@ const MyJobs = () => {
                     ) : (
                       <>
                         <button
-                          onClick={() => handleEnableEdit(job._id)}
+                          type="button"
+                          onClick={handleEnableEdit}
                           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
                         >
                           Edit
                         </button>
 
                         <button
-                          onClick={() => handleDeleteJob(job._id)}
+                          type="button"
+                          onClick={handleDeleteJob}
                           className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
                         >
                           Delete
@@ -421,7 +471,7 @@ const MyJobs = () => {
                     )}
                   </div>
                 </div>
-              ))}
+              )}
             </div>
           </>
         )}

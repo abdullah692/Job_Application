@@ -74,7 +74,7 @@ const JobDetails = () => {
 
         {
         isLoading ? (
-          <div className="absolute inset-0 bg-gray-200/40 flex justify-center items-center z-10">
+          <div className="absolute inset-0  flex justify-center items-center z-10">
             <ClipLoader color="#1D2084" size={60} />
           </div>
         ) :  job && job._id ? (

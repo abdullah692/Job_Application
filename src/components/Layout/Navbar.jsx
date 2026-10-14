@@ -92,7 +92,7 @@ const Navbar = () => {
 
                 <li>
                   <Link
-                    to="/job/getall"
+                    to="/employer/jobs"
                     onClick={() => setShow(false)}
                     className="text-[#184235] lg:text-[#f1f3f6] text-md font-semibold lg:font-light hover:text-[#2d5649] transition"
                   >
