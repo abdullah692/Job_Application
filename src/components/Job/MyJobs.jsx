@@ -20,7 +20,7 @@ const MyJobs = () => {
   const [editingMode, setEditingMode] = useState(null);
   const [message, setMessage] = useState(null)
   const [isLoading, setIsLoading] = useState(true);
-  const [updatingJobId, setUpdatingJobId] = useState(null);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const { isAuthorized, user } = useContext(Context);
 
@@ -30,7 +30,7 @@ const MyJobs = () => {
 
 
 
-  const navigateTo = useNavigate();
+  const navigate = useNavigate();
 
 
 
@@ -68,15 +68,15 @@ const MyJobs = () => {
   //   navigateTo("/");
   // }
 
-const handleEnableEdit = () => {
-  // Store the original job before editing
-  setOriginalJob({ ...myJobs });
+  const handleEnableEdit = () => {
+    // Store the original job before editing
+    setOriginalJob({ ...myJobs });
 
-  console.log("editOriginal", myJobs);
+    console.log("editOriginal", myJobs);
 
-  // Enable editing for this job
-  setEditingMode(myJobs._id);
-};
+    // Enable editing for this job
+    setEditingMode(myJobs._id);
+  };
   //Function For Disabling Editing Mode
   const handleDisableEdit = () => {
     setEditingMode(null);
@@ -97,110 +97,44 @@ const handleEnableEdit = () => {
   // };
 
   const handleInputChange = (id, field, value) => {
-  setMyJobs((prev) => ({
-    ...prev,
-    [field]: value,
-  }));
-};
+    setMyJobs((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
-  const handleUpdateJob = async (jobId) => {
-
-
-    // toast.success("Job updated successfully!")
-    // ;
-    debugger
-
-    const jobToUpdate = myJobs.find((job) => job._id === jobId);
-    console.log("jobToUpdate", jobToUpdate);
-    setOriginalJob({ ...jobToUpdate });
-
-
+  const handleUpdateJob = async () => {
     const updatedFields = {};
-    Object.keys(jobToUpdate).forEach((key) => {
-      if (jobToUpdate[key] !== originalJob[key]) {
-        updatedFields[key] = jobToUpdate[key];
+
+    Object.keys(myJobs).forEach((key) => {
+      if (myJobs[key] !== originalJob[key]) {
+        updatedFields[key] = myJobs[key];
       }
     });
-    setUpdatingJobId(jobId);
 
+    setIsUpdating(true);
 
     try {
-
-      await dispatch(updateJobByJobId({
-        id: jobId,
-        updateFields: updatedFields
-      }))
-        .unwrap().then((x) => {
-          console.log("xjobxs", x);
-          debugger
-          if (x.message == "Job updated successfully!!") {
-
-            setMyJobs((prevJobs) =>
-              prevJobs.map((job) =>
-                job._id === x.job._id ? x.job : job
-              )
-            );
-            setEditingMode(null);
-            setMessage('')
-            setIsLoading(false)
-
-          }
+      const x = await dispatch(
+        updateJobByJobId({
+          id: myJobs._id,
+          updateFields: updatedFields,
         })
+      ).unwrap();
 
+      if (x.message === "Job updated successfully!!") {
+        setMyJobs(x.job);
+        setEditingMode(null);
+        setMessage("");
+      }
     } catch (error) {
-      debugger
       console.log("errormessage", error);
-
-      // toast.error(error.response.data.message);
-      setMessage(error)
-      setIsLoading(false)
-      setMyJobs([])
-
+      setMessage(error);
+    } finally {
+      setIsUpdating(false);
     }
-    finally {
-
-      setUpdatingJobId(null);
-
-    }
-
   };
 
-
-
-
-  const handleDeleteJob = async () => {
-    try {
-
-      await dispatch(deleteJobByJobId({
-        id: id,
-      }))
-        .unwrap().then((x) => {
-          console.log("xjobxs", x);
-          debugger
-          if (x.message == "Job deleted successfully!!") {
-
-
-            setMyJobs((prevJobs) =>
-              prevJobs.filter((job) => job._id !== jobId)
-            );
-
-            setEditingMode(null);
-            setMessage('')
-
-          }
-        })
-
-    } catch (error) {
-      debugger
-      console.log("errormessage", error);
-
-      // toast.error(error.response.data.message);
-      setMessage(error)
-      setIsLoading(false)
-      setMyJobs([])
-
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -369,8 +303,8 @@ const handleEnableEdit = () => {
                         <div className="mt-3">
                           <span
                             className={`px-3 py-1 rounded-full text-sm font-medium ${myJobs.expired
-                                ? "bg-red-100 text-red-600"
-                                : "bg-green-100 text-green-600"
+                              ? "bg-red-100 text-red-600"
+                              : "bg-green-100 text-green-600"
                               }`}
                           >
                             {myJobs.expired ? "Expired" : "Active"}
@@ -428,11 +362,11 @@ const handleEnableEdit = () => {
                       <>
                         <button
                           type="button"
-                          onClick={() => handleUpdateJob(myJobs._id)}
-                          disabled={updatingJobId === myJobs._id}
-                          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-60 flex items-center gap-2"
+                          onClick={handleUpdateJob}
+                          disabled={isUpdating}
+                          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-60"
                         >
-                          {updatingJobId === myJobs._id ? (
+                          {isUpdating ? (
                             <>
                               <ClipLoader color="#fff" size={18} />
                               Updating...
@@ -441,7 +375,6 @@ const handleEnableEdit = () => {
                             "Update"
                           )}
                         </button>
-
                         <button
                           type="button"
                           onClick={handleDisableEdit}
@@ -462,10 +395,10 @@ const handleEnableEdit = () => {
 
                         <button
                           type="button"
-                          onClick={handleDeleteJob}
-                          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+                          onClick={() => navigate("/employer/jobs")}
+                          className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
                         >
-                          Delete
+                          Back
                         </button>
                       </>
                     )}
