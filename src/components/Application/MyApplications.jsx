@@ -3,7 +3,8 @@ import { Context } from "../../main";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-// import ResumeModal from "./ResumeModal";
+import ResumeModal from "./ResumeModal";
+import { RiProfileLine } from "react-icons/ri";
 
 const MyApplications = () => {
   // const { user } = useContext(Context);
@@ -30,7 +31,7 @@ const MyApplications = () => {
       coverLetter:
         "I am a passionate frontend developer with 3 years of experience in React.js, JavaScript, and Tailwind CSS. I would love to contribute to your team.",
       resume: {
-        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        url: "https://drive.google.com/file/d/18uIS5H017QZaiiN2SuFYG-0ik24XUeV-/view?usp=sharing",
       },
       jobInfo: {
         jobId: "122",
@@ -48,10 +49,10 @@ const MyApplications = () => {
       coverLetter:
         "I have experience building responsive web applications using React, TypeScript, and modern frontend tools. I am excited to apply for this position.",
       resume: {
-        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        url: "https://drive.google.com/file/d/18uIS5H017QZaiiN2SuFYG-0ik24XUeV-/view?usp=sharing",
       },
       jobInfo: {
-        jobId:"123",
+        jobId: "123",
         title: "React Developer",
         companyName: "Digital Agency",
       },
@@ -66,7 +67,7 @@ const MyApplications = () => {
       coverLetter:
         "I am a JavaScript developer interested in creating scalable, user-friendly applications. My experience includes React.js, Node.js, and REST APIs.",
       resume: {
-        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        url: "https://drive.google.com/file/d/18uIS5H017QZaiiN2SuFYG-0ik24XUeV-/view?usp=sharing",
       },
       jobInfo: {
         jobId: "124",
@@ -124,6 +125,7 @@ const MyApplications = () => {
   };
 
   const openModal = (imageUrl) => {
+    debugger
     setResumeImageUrl(imageUrl);
     setModalOpen(true);
   };
@@ -132,10 +134,13 @@ const MyApplications = () => {
     setModalOpen(false);
   };
 
-const filteredApplications =
-  selectedJob === "all"
-    ? dummyApplications
-    : dummyApplications.filter(
+
+  console.log(resumeImageUrl, "resumeImageUrl");
+
+  const filteredApplications =
+    selectedJob === "all"
+      ? dummyApplications
+      : dummyApplications.filter(
         (application) => application.jobInfo.jobId === selectedJob
       );
 
@@ -299,13 +304,17 @@ const filteredApplications =
                         PDF Document
                       </p>
 
-                      <button
-                        type="button"
-                        onClick={() => openModal(element.resume.url)}
-                        className="mt-3 w-full rounded-md bg-indigo-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-indigo-700"
-                      >
-                        View Resume
-                      </button>
+                      
+                        <a
+                          target="_blank"
+                          href={element.resume.url}
+                          rel="noreferrer"
+                          className="mt-3 flex w-full items-center justify-center gap-2 rounded-md bg-indigo-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-indigo-700"
+                        >
+                          <span>View Resume</span>
+                          <RiProfileLine />
+                        </a>
+                      
                     </div>
 
                     {/* Delete for Job Seeker */}
@@ -329,7 +338,7 @@ const filteredApplications =
       {/* Resume Modal */}
       {modalOpen && (
         <ResumeModal
-          resumeUrl={resumeUrl}
+          resumeUrl={resumeImageUrl}
           onClose={closeModal}
         />
       )}
@@ -348,48 +357,48 @@ const InfoItem = ({ label, value }) => (
   </div>
 );
 
-const ResumeModal = ({ resumeUrl, onClose }) => (
-  <div
-    className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-    onClick={onClose}
-  >
-    <div
-      className="flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <div className="flex items-center justify-between border-b border-gray-200 px-5 py-4">
-        <h2 className="text-lg font-bold text-gray-900">
-          Resume Preview
-        </h2>
+// const ResumeModal = ({ resumeUrl, onClose }) => (
+//   <div
+//     className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+//     onClick={onClose}
+//   >
+//     <div
+//       className="flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl"
+//       onClick={(e) => e.stopPropagation()}
+//     >
+//       <div className="flex items-center justify-between border-b border-gray-200 px-5 py-4">
+//         <h2 className="text-lg font-bold text-gray-900">
+//           Resume Preview
+//         </h2>
 
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close resume preview"
-          className="rounded-lg px-3 py-1 text-2xl text-gray-500 hover:bg-gray-100 hover:text-gray-900"
-        >
-          &times;
-        </button>
-      </div>
+//         <button
+//           type="button"
+//           onClick={onClose}
+//           aria-label="Close resume preview"
+//           className="rounded-lg px-3 py-1 text-2xl text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+//         >
+//           &times;
+//         </button>
+//       </div>
 
-      <iframe
-        src={resumeUrl}
-        title="Resume Preview"
-        className="min-h-[65vh] w-full flex-1"
-      />
+//       <iframe
+//         src={resumeUrl}
+//         title="Resume Preview"
+//         className="min-h-[65vh] w-full flex-1"
+//       />
 
-      <div className="flex justify-end border-t border-gray-200 p-4">
-        <a
-          href={resumeUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
-        >
-          Open in New Tab
-        </a>
-      </div>
-    </div>
-  </div>
-);
+//       <div className="flex justify-end border-t border-gray-200 p-4">
+//         <a
+//           href={resumeUrl}
+//           target="_blank"
+//           rel="noreferrer"
+//           className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+//         >
+//           Open in New Tab
+//         </a>
+//       </div>
+//     </div>
+//   </div>
+// );
 
 export default MyApplications;
