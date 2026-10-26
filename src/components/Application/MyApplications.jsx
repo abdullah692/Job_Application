@@ -31,7 +31,7 @@ const MyApplications = () => {
       coverLetter:
         "I am a passionate frontend developer with 3 years of experience in React.js, JavaScript, and Tailwind CSS. I would love to contribute to your team.",
       resume: {
-        url: "https://drive.google.com/file/d/18uIS5H017QZaiiN2SuFYG-0ik24XUeV-/view?usp=sharing",
+        url: "https://res.cloudinary.com/v7nb7txw/raw/upload/v1793016314/employerhub/resumes/uv34fgrhmckt3cjygt4e.pdf",
       },
       jobInfo: {
         jobId: "122",
@@ -304,17 +304,17 @@ const MyApplications = () => {
                         PDF Document
                       </p>
 
-                      
-                        <a
-                          target="_blank"
-                          href={element.resume.url}
-                          rel="noreferrer"
-                          className="mt-3 flex w-full items-center justify-center gap-2 rounded-md bg-indigo-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-indigo-700"
-                        >
-                          <span>View Resume</span>
-                          <RiProfileLine />
-                        </a>
-                      
+
+                      <a
+                        href={element.resume.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-3 flex w-full items-center justify-center gap-2 rounded-md bg-indigo-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-indigo-700"
+                      >
+                        <span>View Resume</span>
+                        <RiProfileLine />
+                      </a>
+
                     </div>
 
                     {/* Delete for Job Seeker */}
