@@ -99,6 +99,26 @@ export const getAllJobs = createAsyncThunk(
 );
 
 
+//--------------Get Job Seekers Resume ----------------------------------------------------------
+
+export const getJobSeekerResumes = createAsyncThunk(
+  'auth/getJobSeekerResumes',
+  async (_, { rejectWithValue }) => {
+    try {
+      debugger
+      const response = await axiosInstance.get(
+        "/api/employer/jobSeekerResumes")
+      console.log('Api Resaaaaaaaaaxxxxxxx', response)
+      return response?.data
+    } catch (error) {
+      if (error.response && error.response.data)
+        return rejectWithValue(error.message); // Handle other errors (e.g., network)
+    }
+
+  }
+);
+
+
 
 export const getEmployerJobs = createAsyncThunk(
   'auth/getJobs',
