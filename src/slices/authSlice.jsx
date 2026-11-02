@@ -119,6 +119,26 @@ export const getJobSeekerResumes = createAsyncThunk(
 );
 
 
+export const deleteJobSeekerByEmployer = createAsyncThunk(
+  'auth/deleteJobSeekerByEmployer',
+  async ({id}, { rejectWithValue }) => {
+    try {
+debugger
+      const response = await axiosInstance.delete(
+        `/api/deleteJobSeekerByEmployer/${id}`);
+      return response?.data
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return rejectWithValue(error.response.data.message); // Pass error message
+      }
+      return rejectWithValue(error.message) // Handle other errors (e.g., network)
+    }
+
+  }
+);
+
+
+
 
 export const getEmployerJobs = createAsyncThunk(
   'auth/getJobs',

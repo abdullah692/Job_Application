@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { ClipLoader } from "react-spinners";
 
 import { RiProfileLine } from "react-icons/ri";
-import { getJobSeekerResumes } from "../../slices/authSlice";
+import { getJobSeekerResumes ,deleteJobSeekerByEmployer} from "../../slices/authSlice";
 
 
 const MyApplications = () => {
@@ -27,6 +27,7 @@ const MyApplications = () => {
     try {
       dispatch(getJobSeekerResumes())
         .unwrap().then((x) => {
+          debugger
           if (x.success == true) {
             console.log("xjobxs", x);
 
@@ -58,31 +59,35 @@ const MyApplications = () => {
 
 
 
-  // const deleteApplication = (id) => {
-  //   try {
-  //     axios
-  //       .delete(`http://localhost:4000/api/v1/application/delete/${id}`, {
-  //         withCredentials: true,
-  //       })
-  //       .then((res) => {
-  //         toast.success(res.data.message);
-  //         setApplications((prevApplication) =>
-  //           prevApplication.filter((application) => application._id !== id)
-  //         );
-  //       });
-  //   } catch (error) {
-  //     toast.error(error.response.data.message);
-  //   }
-  // };
+const handleDeleteApplication = (id) => {
+  try {
+    dispatch(deleteJobSeekerByEmployer(id))
+      .unwrap()
+      .then((x) => {
+        if (x.success === true) {
+          toast.success(x.message);
 
+          setApplications((prev) =>
+            prev.filter((application) => application._id !== id)
+          );
+        }
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
+  } catch (error) {
+    console.log("error", error);
+    toast.error(error);
+  }
+};
 
   useEffect(() => {
+    debugger
     handleApplications()
   }, []);
 
 
 
-  console.log(resumeImageUrl, "resumeImageUrl");
   const uniqueJobs = [];
 
   applications.forEach((application) => {
@@ -230,12 +235,27 @@ const MyApplications = () => {
                           <h3 className="text-xs font-bold uppercase tracking-wide text-gray-500">
                             Applicant Information
                           </h3>
-
                           <div className="grid gap-3 sm:grid-cols-2">
-                            <InfoItem label="Full Name" value={element.name} />
-                            <InfoItem label="Email Address" value={element.email} />
-                            <InfoItem label="Phone Number" value={element.phone} />
-                            <InfoItem label="Address" value={element.address} />
+                            <div>
+                              <p className="text-xs text-gray-500">Email Address</p>
+                              <p className="text-sm font-medium text-gray-800">
+                                {element.email || "N/A"}
+                              </p>
+                            </div>
+
+                            <div>
+                              <p className="text-xs text-gray-500">Phone Number</p>
+                              <p className="text-sm font-medium text-gray-800">
+                                {element.phone || "N/A"}
+                              </p>
+                            </div>
+
+                            <div>
+                              <p className="text-xs text-gray-500">Address</p>
+                              <p className="text-sm font-medium text-gray-800">
+                                {element.address || "N/A"}
+                              </p>
+                            </div>
                           </div>
 
                           {/* Job information for employer */}
@@ -300,7 +320,7 @@ const MyApplications = () => {
                           {user && (
                             <button
                               type="button"
-                              // onClick={() => deleteApplication(element._id)}
+                              onClick={() => handleDeleteApplication(element._id)}
                               className="rounded-md border border-red-200 px-3 py-2 text-xs font-semibold text-red-600 transition hover:bg-red-50"
                             >
                               Delete Application
