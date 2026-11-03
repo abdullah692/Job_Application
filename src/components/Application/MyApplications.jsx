@@ -196,8 +196,8 @@ const handleDeleteApplication = (id) => {
                   </h2>
                   <p className="mt-1 text-sm text-gray-500">
                     {user
-                      ? "You have not submitted any job applications yet."
-                      : "There are no applications for your posted jobs yet."}
+                      ? "There are no applications for your posted jobs yet."
+                      : "You have not submitted any job applications yet."}
                   </p>
                 </div>
               ) : (

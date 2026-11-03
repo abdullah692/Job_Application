@@ -121,9 +121,9 @@ export const getJobSeekerResumes = createAsyncThunk(
 
 export const deleteJobSeekerByEmployer = createAsyncThunk(
   'auth/deleteJobSeekerByEmployer',
-  async ({id}, { rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
-debugger
+      debugger
       const response = await axiosInstance.delete(
         `/api/deleteJobSeekerByEmployer/${id}`);
       return response?.data
@@ -153,8 +153,8 @@ export const getEmployerJobs = createAsyncThunk(
       debugger
       // Backend returned an error (400, 401, 403, 404, 500)
       if (error.response) {
-        console.log("error message",error.response);
-        
+        console.log("error message", error.response);
+
         return rejectWithValue(error.response.data.message);
       }
 
@@ -214,17 +214,18 @@ export const postJob = createAsyncThunk(
   }
 );
 
-   
+
 
 
 
 export const updateJobByJobId = createAsyncThunk(
   'auth/updateJobByJobId',
-  async ({id,updateFields}, { rejectWithValue }) => {
-    try {;
+  async ({ id, updateFields }, { rejectWithValue }) => {
+    try {
+      ;
 
       const response = await axiosInstance.patch(
-        `/api/updateJob/${id}`,updateFields);
+        `/api/updateJob/${id}`, updateFields);
       return response?.data
     } catch (error) {
       if (error.response && error.response.data) {
@@ -241,7 +242,7 @@ export const updateJobByJobId = createAsyncThunk(
 
 export const deleteJobByJobId = createAsyncThunk(
   'auth/deleteJobByJobId',
-  async ({id}, { rejectWithValue }) => {
+  async ({ id }, { rejectWithValue }) => {
     try {
 
       const response = await axiosInstance.delete(
@@ -303,6 +304,8 @@ const authSlice = createSlice({
       state.user = action.payload;
     },
     logout: (state) => {
+      debugger
+      state.token = "";
       state.isAuthorized = false;
       state.user = null;
     },

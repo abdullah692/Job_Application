@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Context } from "../../main";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { useSelector, useDispatch } from "react-redux";
 import employeeLogo from "../../assets/images/employee.png"; // adjust path as needed
-import { useSelector } from "react-redux";
+import { logout} from "../../slices/authSlice";
 
 const Navbar = () => {
   const [show, setShow] = useState(false);
@@ -14,25 +13,17 @@ const Navbar = () => {
   const { isAuthorized, user } = useSelector((state) => state.auth)
   console.log("user", user);
 
-
+  const dispatch = useDispatch();
   const navigateTo = useNavigate();
 
-  const handleLogout = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:4000/api/v1/user/logout",
-        {
-          withCredentials: true,
-        }
-      );
-      toast.success(response.data.message);
-      // setIsAuthorized(false);
-      navigateTo("/login");
-    } catch (error) {
-      toast.error(error.response.data.message), setIsAuthorized(true);
-    }
-  };
 
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    dispatch(logout());
+    toast.success("Logged out successfully!");
+    navigateTo("/login");
+  };
   // ${isAuthorized ? "block" : "hidden"}
 
   return (
