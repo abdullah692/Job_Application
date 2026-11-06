@@ -55,7 +55,7 @@ const App = () => {
         {/* <Route path="/" element={<Home />} /> */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        {/* <Route path="/job/getall" element={<Jobs />} /> */}
+        <Route path="/job/getall" element={<Jobs />} />
         {/* <Route path="/job/:id" element={<JobDetails />} /> */}
 
         {/* Protected */}

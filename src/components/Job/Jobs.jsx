@@ -4,7 +4,7 @@ import ConfirmDialog from "../DialogBox/DialogBox";
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../../main";
 import { useSelector, useDispatch } from "react-redux";
-import { getEmployerJobs, deleteJobByJobId } from "../../slices/authSlice";
+import { getEmployerJobs, deleteJobByJobId, getAllJobs } from "../../slices/authSlice";
 import toast from "react-hot-toast";
 import { TbCategory, TbWorld } from "react-icons/tb";
 import { GoOrganization } from "react-icons/go";
@@ -28,15 +28,23 @@ const Jobs = () => {
   const dispatch = useDispatch();
 
   let hasErrorToastShown = false;
+
   const handleJobs = () => {
 
     try {
-      dispatch(getEmployerJobs())
+      dispatch(
+        user?.role === "Job Seeker"
+          ? getAllJobs()
+          : getEmployerJobs()
+      )
         .unwrap().then((x) => {
-          if (x.message == "Jobs fetched successfully!") {
+          if (x.success == true) {
             console.log("xjobxs", x);
 
-            setJobs(x.jobPostedBy)
+            setJobs(
+              user?.role === "Job Seeker" ?
+                x.jobs :
+                x.jobPostedBy)
             setIsLoading(false)
           }
         })
