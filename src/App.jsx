@@ -35,7 +35,7 @@ const App = () => {
 
       dispatch(getCurrentUser()); // only fetch user if token exists
     }
-   
+
   }, []);
 
 
@@ -70,7 +70,7 @@ const App = () => {
         />
 
         <Route
-          path="/employer/jobs"
+          path="/jobs"
           element={
             <ProtectedRoute>
               <Jobs />
@@ -78,8 +78,16 @@ const App = () => {
           }
         />
 
+        <Route
+          path="/myJobs"
+          element={
+            <ProtectedRoute>
+              <Jobs />
+            </ProtectedRoute>
+          }
+        />
 
-         <Route
+        <Route
           path="/job/post"
           element={
             <ProtectedRoute>
@@ -97,11 +105,11 @@ const App = () => {
           }
         />
 
-          <Route
+        <Route
           path="/job/:id"
           element={
             <ProtectedRoute>
-              <JobDetails/>
+              <JobDetails />
             </ProtectedRoute>
           }
         />
@@ -124,7 +132,7 @@ const App = () => {
           }
         />
 
-       
+
 
         <Route path="*" element={<NotFound />} />
       </Routes>
