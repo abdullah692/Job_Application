@@ -18,7 +18,7 @@ const JobDetails = () => {
   const [job, setJob] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const navigateTo = useNavigate();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   let hasErrorToastShown = false;
@@ -66,18 +66,18 @@ const JobDetails = () => {
 
 
         {/* Heading */}
-        {!isLoading  && (
+        {!isLoading && (
           <h1 className="text-2xl md:text-3xl font-semibold text-center text-gray-800 mb-8">
             Job Details
           </h1>
         )}
 
         {
-        isLoading ? (
-          <div className="absolute inset-0  flex justify-center items-center z-10">
-            <ClipLoader color="#1D2084" size={60} />
-          </div>
-        ) :  job && job._id ? (
+          isLoading ? (
+            <div className="absolute inset-0  flex justify-center items-center z-10">
+              <ClipLoader color="#1D2084" size={60} />
+            </div>
+          ) : job && job._id ? (
             <div className="bg-white border border-gray-300 rounded-lg p-6 md:p-8 shadow-sm">
 
               {/* Header */}
@@ -86,14 +86,14 @@ const JobDetails = () => {
                   {job.title}
                 </h2>
 
-                
+
 
                 <div className="flex flex-wrap items-center gap-4 mt-2 text-gray-600 text-sm">
-                 <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1">
                     <GoOrganization />
                     <span> {job.companyName ? job.companyName : "Teresol Technologies"}</span>
                   </div>
-                 
+
                   <div className="flex items-center gap-1">
                     <MdWork />
                     <span>{job.category}</span>
@@ -146,15 +146,45 @@ const JobDetails = () => {
               </div>
 
               {/* Button (same style as cards) */}
-              <div className="mt-8">
+              {/* <div className="mt-8">
                 <Link
                   to={`/application/${job._id}`}
-                  className="inline-block w-full text-center bg-blue-900 text-white py-2 rounded-md text-sm hover:bg-blue-500 transition"
+                  className="inline-flex items-center justify-center bg-[#1D2084] text-white px-8 py-2.5 rounded-lg text-sm font-medium hover:bg-blue-800 transition duration-200 shadow-sm"
                 >
                   Apply Now
                 </Link>
               </div>
+              <div className="flex justify-end  mt-6">
+                <button
+                  type="button"
+                  onClick={() => navigate("/jobs")}
+                  className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                >
+                  Back
+                </button>
+              </div> */}
 
+
+              <div className="flex items-center justify-between mt-8 pt-5 border-t border-gray-200">
+
+                <button
+                  type="button"
+                  onClick={() => navigate("/jobs")}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-gray-300 text-gray-700 text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition duration-200"
+                >
+                  <span>←</span>
+                  Back to Jobs
+                </button>
+
+                <Link
+                  to={`/application/${job._id}`}
+                  className="inline-flex items-center justify-center px-7 py-2.5 rounded-lg bg-[#1D2084] text-white text-sm font-semibold hover:bg-blue-800 transition duration-200 shadow-sm"
+                >
+                  Apply Now
+                  <span className="ml-2">→</span>
+                </Link>
+
+              </div>
             </div>
           ) : (
             <div className="text-center mt-20">

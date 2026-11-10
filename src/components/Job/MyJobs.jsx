@@ -385,15 +385,15 @@ const MyJobs = () => {
                         <button
                           type="button"
                           onClick={handleEnableEdit}
-                          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                          className="bg-[#1D2084] text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition duration-200 shadow-sm"
                         >
                           Edit
                         </button>
 
                         <button
                           type="button"
-                          onClick={() => navigate("/employer/jobs")}
-                          className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                          onClick={() => navigate("/myJobs")}
+                          className="rounded-lg border border-gray-300 text-gray-700 px-4 py-2 rounded-lghover:bg-gray-50 hover:border-gray-400 transition duration-200"
                         >
                           Back
                         </button>
