@@ -13,7 +13,7 @@ const MyApplications = () => {
   const [applications, setApplications] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState("all");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { isAuthorized, user } = useSelector((state) => state.auth)
 
@@ -123,11 +123,11 @@ const handleDeleteApplication = (id) => {
           </p>
 
           <h1 className="text-2xl font-bold text-gray-900">
-            {user ? "Applications From Job Seekers" : "My Submitted Applications"}
+            {user == "Employer" ? "Applications From Job Seekers" : "My Submitted Applications"}
           </h1>
 
           <p className="mt-1 text-sm text-gray-500">
-            {user
+            {user == "Employer"
               ? "Review candidate information and explore their resumes."
               : "Track the applications you have submitted."}
           </p>
@@ -147,7 +147,7 @@ const handleDeleteApplication = (id) => {
               <div className="mb-4 flex items-center justify-between rounded-lg border border-gray-200 bg-white p-3 shadow-sm">
                 <div>
                   <p className="text-xs text-gray-500">
-                    {user ? "Received Applications" : "My Submitted Applications"}
+                    {user == "Employer" ? "Received Applications" : "My Submitted Applications"}
                   </p>
                   <p className="mt-1 text-xl font-bold text-gray-900">
                     {applications.length}
@@ -195,7 +195,7 @@ const handleDeleteApplication = (id) => {
                     No Applications Found
                   </h2>
                   <p className="mt-1 text-sm text-gray-500">
-                    {user
+                    {user == "Employer"
                       ? "There are no applications for your posted jobs yet."
                       : "You have not submitted any job applications yet."}
                   </p>

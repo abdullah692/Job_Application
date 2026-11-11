@@ -16,6 +16,8 @@ import Jobs from "./components/Job/Jobs";
 import JobDetails from "./components/Job/JobDetails";
 import Application from "./components/Application/Application";
 import MyApplications from "./components/Application/MyApplications";
+import AppliedApplication from "./components/Application/AppliedApplication";
+
 import PostJob from "./components/Job/PostJob";
 import NotFound from "./components/NotFound/NotFound";
 import MyJobs from "./components/Job/MyJobs";
@@ -128,6 +130,16 @@ const App = () => {
           element={
             <ProtectedRoute>
               <MyApplications />
+            </ProtectedRoute>
+          }
+        />
+
+
+        <Route
+          path="/appliedApplication"
+          element={
+            <ProtectedRoute>
+              <AppliedApplication />
             </ProtectedRoute>
           }
         />

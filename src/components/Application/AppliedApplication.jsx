@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { FaEye, FaTrashAlt } from "react-icons/fa";
 
-const MyApplications = () => {
+const AppliedApplication = () => {
   const [applications, setApplications] = useState([]);
 
   // Replace this sample data with your API response
@@ -71,7 +71,7 @@ const MyApplications = () => {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-gray-800">
-            My Applications
+            Applied Applications
           </h1>
           <p className="text-sm text-gray-500 mt-2">
             Track and manage the jobs you have applied for.
@@ -123,7 +123,7 @@ const MyApplications = () => {
                   </p>
                 </div>
 
-                {/* Actions */}
+{/* 
                 <div className="flex items-center justify-between border-t border-gray-100 mt-5 pt-4">
                   <a
                     href={application.resume.url}
@@ -142,7 +142,7 @@ const MyApplications = () => {
                     <FaTrashAlt />
                     Delete
                   </button>
-                </div>
+                </div> */}
               </div>
             ))
           ) : (
@@ -161,4 +161,4 @@ const MyApplications = () => {
   );
 };
 
-export default MyApplications;
+export default AppliedApplication;
